@@ -17,7 +17,7 @@ AAIPatrolController::AAIPatrolController()
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
 
 	// Initialize blackboard keys
-	PlayerKey = "Target";
+	PlayerKey = "Player";
 	LocationToGoKey = "LocationToGo";
 
 	CurrentPatrolPoint = 0;

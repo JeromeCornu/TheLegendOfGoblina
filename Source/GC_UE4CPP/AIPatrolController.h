@@ -32,13 +32,14 @@ class GC_UE4CPP_API AAIPatrolController : public AAIController
 
 		void OnPossess(APawn* InPawn); // function called when possess a pawn
 
-		int32 CurrentPatrolPoint = 0;
 
 public:
 
 	AAIPatrolController();
 
 	void SetPlayerCaught(APawn* _Pawn);
+
+	int32 CurrentPatrolPoint = 0;
 
 	// Inline getter Functions
 
