@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "PickableItem.h"
 #include "PlayerCharacter.h"
 
 // Sets default values
@@ -65,6 +66,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("MoveForward", this, &APlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APlayerCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("Interact",IE_Pressed, this, &APlayerCharacter::OnBeginInteract);
+
 }
 
 // Get the Forward direction from the current rotation of the controller
@@ -91,4 +94,42 @@ void APlayerCharacter::MoveRight(float Axis)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, Axis);
 	}
+}
+
+void APlayerCharacter::OnBeginInteract() 
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("E pressed"));
+
+	if(PossessedItem) GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("PossessedItem"));
+	if(PickableItem) GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("PickableItem"));
+
+	if (PossessedItem)
+	{
+		ThrowPossessedItem();
+	}
+	else 
+	{
+		if (PickableItem) 
+		{
+			PickUpItem();
+		}
+	}
+}
+
+void APlayerCharacter::PickUpItem()
+{
+	PossessedItem = PickableItem;
+	PossessedItem->TogglePhysicsAndCollision();
+	PossessedItem->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("ItemSocket"));
+	
+	PickableItem = nullptr;
+}
+
+void APlayerCharacter::ThrowPossessedItem()
+{
+	PickableItem = PossessedItem;
+
+	PossessedItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	PossessedItem->TogglePhysicsAndCollision();
+	PossessedItem = nullptr;
 }

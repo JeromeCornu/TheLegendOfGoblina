@@ -16,6 +16,8 @@
 
 #include "PlayerCharacter.generated.h"
 
+class APickableItem;
+
 UCLASS()
 class GC_UE4CPP_API APlayerCharacter : public ACharacter
 {
@@ -61,5 +63,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void OnBeginInteract();
+
+	void PickUpItem();
+	void ThrowPossessedItem();
+
+	APickableItem* PickableItem = nullptr;
+	APickableItem* PossessedItem = nullptr;
 
 };
