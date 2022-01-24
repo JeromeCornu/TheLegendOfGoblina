@@ -16,6 +16,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -26,9 +27,24 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		class UPawnSensingComponent* PawnSensingComp;
 
+	// la
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+		class USphereComponent* MyCollisionSphere;
+
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+		class UStaticMeshComponent* MyMesh;
+
+	float SphereRadius;
+	// a la
+
+
 private:
 
 	UFUNCTION()
 		void OnPlayerCaught(APawn* Pawn);
+
+	UFUNCTION()
+		void OnPlayerGrab(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 
 };
