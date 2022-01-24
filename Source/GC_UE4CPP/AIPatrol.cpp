@@ -7,7 +7,7 @@
 #include "Perception/PawnSensingComponent.h"
 
 
-// Sets default values
+// Detection + call functions when you've been see
 AAIPatrol::AAIPatrol()
 {
 	// Initialize Senses
@@ -29,6 +29,7 @@ void AAIPatrol::BeginPlay()
 
 void AAIPatrol::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	// Allow the AIPatrolController to possess the AIPatrol
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
@@ -41,7 +42,8 @@ void AAIPatrol::OnPlayerCaught(APawn* Pawn)
 	// Cast succesful ?
 	if (AIController)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("You have been caught!"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("You have been see!"));
+		// Call the function SetPlayerCaught in AIPatrolController
 		AIController->SetPlayerCaught(Pawn);
 	}
 }

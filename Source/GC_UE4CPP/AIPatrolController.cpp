@@ -10,6 +10,7 @@
 #include "GameFramework/Controller.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
+// Result of beeing see + connection with the BB and the BT
 AAIPatrolController::AAIPatrolController()
 {
 	// Initialize blackboard abnd behavior tree
@@ -23,7 +24,7 @@ AAIPatrolController::AAIPatrolController()
 	CurrentPatrolPoint = 0;
 }
 
-// The player is caught
+// The player is caught -> set a key on the blackboard
 void AAIPatrolController::SetPlayerCaught(APawn* _Pawn)
 {
 	if (BlackboardComp)
