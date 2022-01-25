@@ -24,4 +24,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Steaks")
 		virtual void SetSteaks(int32 newSteaks);
+
+protected:
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> ExampleUIClass;
+
+	UUserWidget* ExampleUI;
+
+	virtual void BeginPlay() override;
 };
