@@ -6,6 +6,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "Perception/PawnSensingComponent.h"
 #include "DrawDebugHelpers.h"
+#include "PlayerCharacter.h"
 #include "Components/SphereComponent.h"
 
 
@@ -60,7 +61,7 @@ void AAIPatrol::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AAIPatrol::OnPlayerCaught(APawn* Pawn)
 {
-	// Get a reference to the player controller
+	// Get a reference to the actor controller
 	AAIPatrolController* AIController = Cast<AAIPatrolController>(GetController());
 
 	// Cast succesful ?
@@ -74,8 +75,11 @@ void AAIPatrol::OnPlayerCaught(APawn* Pawn)
 
 void AAIPatrol::OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// Get a reference to the player
+	APlayerCharacter* PlayerReference = (APlayerCharacter*)OtherActor;
+
 	// If the player has been grab -> play defeat
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	if ((OtherActor != nullptr) && (OtherActor->ActorHasTag(TEXT("Player"))) && (OtherComp != nullptr))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Gotcha !"));
 	}
