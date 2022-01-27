@@ -1,7 +1,6 @@
 #include "Camera/CameraComponent.h"
-#include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/Controller.h"
+#include "PickItemComponent.h"
 #include "PlayableCharacter.h"
 
 // Sets default values
@@ -22,60 +21,18 @@ APlayableCharacter::APlayableCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	PickItemComponent = CreateDefaultSubobject<UPickItemComponent>(TEXT("PickItemComponent"));
 }
 
 // Called when the game starts or when spawned
 void APlayableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
 void APlayableCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	// Bind mouse and keyboard inputs : you need to add axis mappings in project settings->inputs
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &APlayableCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &APlayableCharacter::MoveRight);
-
-	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ABaseCharacter::OnBeginInteract);
-
-}
-
-// Get the Forward direction from the current rotation of the controller
-void APlayableCharacter::MoveForward(float Axis)
-{
-	if (!bDead)
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Axis);
-	}
-}
-
-// Get the Right direction from the current rotation of the controller
-void APlayableCharacter::MoveRight(float Axis)
-{
-	if (!bDead)
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, Axis);
-	}
 }

@@ -1,11 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
+
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
-class APickableItem;
+class UInteractiveObjectComponent;
 
 UCLASS()
 class GC_UE4CPP_API ABaseCharacter : public ACharacter
@@ -13,27 +12,20 @@ class GC_UE4CPP_API ABaseCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-
 	ABaseCharacter();
 
 	bool bDead;
+	bool bInRangeOfInteractiveObject;
+	bool bHaveItemInHand;
 
-	APickableItem* PickableItem;
-	APickableItem* PossessedItem;
-
-	void PickUpItem();
-	void ThrowPossessedItem();
-
-	void OnBeginInteract();
+	UInteractiveObjectComponent* ComponentInInteraction;
+	UInteractiveObjectComponent* ComponentUsingHand;
 
 protected:
-
 	virtual void BeginPlay() override;
 
 public:	
-
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	void Interact();
 };

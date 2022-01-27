@@ -1,6 +1,6 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "PickableItem.h"
+#include "InteractiveObjectComponent.h"
 #include "BaseCharacter.h"
 
 // Sets default values
@@ -11,7 +11,6 @@ ABaseCharacter::ABaseCharacter()
 
 	// Initialize capsule size
 	GetCapsuleComponent()->InitCapsuleSize(50.0f, 160.0f);
-
 
 	// Not to allow the character to rotate itself
 	bUseControllerRotationPitch = false;
@@ -24,70 +23,35 @@ ABaseCharacter::ABaseCharacter()
 
 	// Blocks all interactions when the character is dead
 	bDead = false;
-
-	// Item in range of being picked up
-	PickableItem = nullptr;
-
-	// Current possessed item
-	PossessedItem = nullptr;
+	bInRangeOfInteractiveObject = false;
+	bHaveItemInHand = false;
 }
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-// Pick up in range item
-void ABaseCharacter::PickUpItem()
-{
-	PossessedItem = PickableItem;
-	PossessedItem->TogglePhysicsAndCollision();
-	PossessedItem->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("ItemSocket"));
-
-	PickableItem = nullptr;
-}
-
-// Throw the current possessed item
-void ABaseCharacter::ThrowPossessedItem()
-{
-	PickableItem = PossessedItem;
-
-	PossessedItem->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	PossessedItem->TogglePhysicsAndCollision();
-	PossessedItem = nullptr;
 }
 
 // Interaction with items
-void ABaseCharacter::OnBeginInteract()
+void ABaseCharacter::Interact()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("E pressed"));
 	if (!bDead) 
 	{
-		if (PossessedItem)
+		if (bHaveItemInHand)
 		{
-			ThrowPossessedItem();
+			ComponentUsingHand->Interact();
 		}
-		else
+		else if (bInRangeOfInteractiveObject)
 		{
-			if (PickableItem)
-			{
-				PickUpItem();
-			}
+			ComponentInInteraction->Interact();
 		}
 	}
 }

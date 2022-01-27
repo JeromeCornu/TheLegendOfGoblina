@@ -6,14 +6,15 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UPickItemComponent;
 
 UCLASS()
 class GC_UE4CPP_API APlayableCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
+
 public:
 	APlayableCharacter();
-
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		USpringArmComponent* CameraBoom;
@@ -21,17 +22,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		UCameraComponent* FollowCamera;
 
-	void MoveForward(float Axis);
-
-	void MoveRight(float Axis);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PickItemComponent)
+		UPickItemComponent* PickItemComponent;
 
 protected:
 	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void OnBeginInteract();
 };
