@@ -30,7 +30,7 @@ EBTNodeResult::Type UBTSelectPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 		{
 			NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[++AICon->CurrentPatrolPoint]); // -> go to the next point
 		}
-		// if there are no more target to go to 
+		// if there are no more target points to go to 
 		else
 		{
 			NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[0]); // -> return to the first point
