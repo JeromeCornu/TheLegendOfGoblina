@@ -22,15 +22,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Steaks")
 		virtual int32 GetSteaks() const;
 
+
+	//setter the number of steaks
 	UFUNCTION(BlueprintCallable, Category = "Steaks")
 		virtual void SetSteaks(int32 newSteaks);
 
-protected:
+	
 
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> ExampleUIClass;
-
-	UUserWidget* ExampleUI;
-
-	virtual void BeginPlay() override;
 };
