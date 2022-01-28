@@ -32,7 +32,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Plate")
 		FRotator NewRotation;
 
-	AAIPatrolTargetPoint();
 
 private:
 

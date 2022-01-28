@@ -29,7 +29,7 @@ void AAIPatrolTargetPoint::OnSteakClose(UPrimitiveComponent* OverlappedComp, AAc
 	NewLocation = this->GetActorLocation();
 
 	// If the aliment is close -> teleport it on the plate
-	if ((OtherActor != nullptr) && (OtherActor->ActorHasTag(TEXT("Food"))) //  && (Food != attrapé)
+	if ((OtherActor != nullptr) && (OtherActor->ActorHasTag(TEXT("Food")))) //  && (Food != attrapé)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Steak found !"));
 		SetActorLocationAndRotation(NewLocation, NewRotation, false, 0, ETeleportType::None);
