@@ -79,7 +79,7 @@ void AAIPatrol::OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* Other
 	APlayerCharacter* PlayerReference = (APlayerCharacter*)OtherActor;
 
 	// If the player has been grab -> play defeat
-	if ((OtherActor != nullptr) && (OtherActor->ActorHasTag(TEXT("Player"))) && (OtherComp != nullptr))
+	if ((OtherActor != nullptr) && (OtherActor->ActorHasTag(TEXT("Player"))))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Gotcha !"));
 	}

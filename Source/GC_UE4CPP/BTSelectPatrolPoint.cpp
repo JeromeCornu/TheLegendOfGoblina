@@ -44,6 +44,7 @@ EBTNodeResult::Type UBTSelectPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 		// if the place is free
 		else
 		{
+			// Put the aliment
 			NextPatrolPoint = FirstPoint; // -> return to the first point
 			AICon->CurrentPatrolPoint = 0; // current point = the first
 		}

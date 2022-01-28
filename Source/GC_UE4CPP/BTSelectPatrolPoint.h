@@ -19,9 +19,9 @@ class GC_UE4CPP_API UBTSelectPatrolPoint : public UBTTaskNode
 
 public: 
 
-	UPROPERTY(EditAnywhere)
-		bool Occupied = false;
+	UPROPERTY(EditAnywhere, Category = "Road")
+		bool Occupied = true;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Road")
 		bool FirstTime = true;
 };
