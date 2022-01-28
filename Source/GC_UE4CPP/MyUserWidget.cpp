@@ -9,7 +9,7 @@
 
 void UMyUserWidget::NativeConstruct()
 {
-	
+	//corresponding button clicked to real function
 	if (StartButton)
 	{
 		StartButton->OnClicked.AddDynamic(this, &UMyUserWidget::OnStartButtonClicked);
@@ -28,7 +28,7 @@ void UMyUserWidget::NativeConstruct()
 
 void UMyUserWidget::OnStartButtonClicked()
 {
-	UGameplayStatics::OpenLevel(this, "Hugo", false);
+	UGameplayStatics::OpenLevel(this, "Thomas", false);
 }
 
 void UMyUserWidget::OnOptionsButtonClicked()
