@@ -22,8 +22,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		UCameraComponent* FollowCamera;
 
+	/*
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PickItemComponent)
 		UPickItemComponent* PickItemComponent;
+	*/
 
 protected:
 	virtual void BeginPlay() override;

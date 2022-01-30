@@ -1,6 +1,8 @@
+
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "InteractiveObjectComponent.h"
+#include "Interfaces/InteractInterface.h"
 #include "BaseCharacter.h"
 
 // Sets default values
@@ -20,17 +22,29 @@ ABaseCharacter::ABaseCharacter()
 	// Orient character to movement and set up rotation rate
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
+	
+	InteractCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("InteractionCapsule"));
+	InteractCapsule->SetupAttachment(RootComponent);
+	InteractCapsule->InitCapsuleSize(150.0f, 200.0f);
+	InteractCapsule->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	// Blocks all interactions when the character is dead
 	bDead = false;
-	bInRangeOfInteractiveObject = false;
-	bHaveItemInHand = false;
+
+	SocketName = "ItemSocket";
+	
+	InteractableObject = nullptr;
+	PossessedObject = nullptr;	
 }
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Delegates
+	InteractCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABaseCharacter::InteractiveObjectBeginOverlap);
+	InteractCapsule->OnComponentEndOverlap.AddDynamic(this, &ABaseCharacter::InteractiveObjectEndOverlap);
 }
 
 // Called every frame
@@ -42,17 +56,40 @@ void ABaseCharacter::Tick(float DeltaTime)
 // Interaction with items
 void ABaseCharacter::Interact()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("E pressed"));
-	if (!bDead) 
+	if (!bDead)
 	{
-		if (bHaveItemInHand)
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("E pressed"));
+
+		if (InteractableObject) 
 		{
-			ComponentUsingHand->Interact();
+			InteractableObject->Interact(this);
 		}
-		else if (bInRangeOfInteractiveObject)
+		else if (PossessedObject)
 		{
-			ComponentInInteraction->Interact();
+			PossessedObject->Interact(this);
 		}
 	}
 }
+
+void ABaseCharacter::InteractiveObjectBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
+{
+	InteractableObject = Cast<IInteractInterface>(OtherActor);
+	if (InteractableObject)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("(ABaseCharacter) Press E to iteract with object"));		
+	}
+}
+
+	
+void ABaseCharacter::InteractiveObjectEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	IInteractInterface* OtherInteractable = Cast<IInteractInterface>(OtherActor);
+	if (InteractableObject == OtherInteractable)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("(ABaseCharacter) Cannot press E to iteract anymore"));
+
+		InteractableObject = nullptr;
+	}
+}
+
 

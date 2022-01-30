@@ -22,7 +22,7 @@ APlayableCharacter::APlayableCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
-	PickItemComponent = CreateDefaultSubobject<UPickItemComponent>(TEXT("PickItemComponent"));
+	//PickItemComponent = CreateDefaultSubobject<UPickItemComponent>(TEXT("PickItemComponent"));
 }
 
 // Called when the game starts or when spawned

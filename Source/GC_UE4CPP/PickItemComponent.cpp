@@ -47,15 +47,18 @@ void UPickItemComponent::PickUpItem()
 	PossessedItem->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("ItemSocket"));
 
 	PickableItem = nullptr;
-
+	/*
 	Owner->bHaveItemInHand = true;
 	Owner->ComponentUsingHand = this;
+	*/
 }
 
 void UPickItemComponent::ThrowPossessedItem()
 {
+	/*
 	Owner->bHaveItemInHand = false;
 	Owner->ComponentUsingHand = nullptr;
+	*/
 
 	PickableItem = PossessedItem;
 
@@ -87,8 +90,10 @@ void UPickItemComponent::InteractiveObjectBeginOverlap(UPrimitiveComponent* Over
 	PickableItem = Cast<APickableItem>(OtherActor);
 	if (PickableItem)
 	{
+		/*
 		Owner->bInRangeOfInteractiveObject = true;
 		Owner->ComponentInInteraction = this;
+		*/
 	}
 }
 
@@ -97,9 +102,11 @@ void UPickItemComponent::InteractiveObjectEndOverlap(UPrimitiveComponent* Overla
 	GEngine->AddOnScreenDebugMessage(-1, 50.0f, FColor::Green, TEXT("Cannot press E to pick item anymore (Child)"));
 	if (Cast<APickableItem>(OtherActor))
 	{
+		/*
 		PickableItem = nullptr;
 		Owner->bInRangeOfInteractiveObject = false;
 		Owner->ComponentInInteraction = nullptr;
+		*/
 	}
 }
 
