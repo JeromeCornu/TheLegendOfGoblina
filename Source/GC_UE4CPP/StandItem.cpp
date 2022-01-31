@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Engine/TargetPoint.h"
 #include "BaseCharacter.h"
@@ -36,22 +35,6 @@ void AStandItem::Tick(float DeltaTime)
 
 }
 
-void AStandItem::LayItem(APickableItem* item)
-{
-	item->Owner->PossessedObject = nullptr;
-	item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	item->SetActorLocationAndRotation(StaticMesh->GetSocketLocation(SocketName), StaticMesh->GetSocketQuaternion(SocketName));
-	item->AttachToComponent(StaticMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, SocketName);
-}
-
-void AStandItem::TakeItem(APickableItem* item)
-{
-	ABaseCharacter* character = item->Owner;
-	character->PossessedObject = item;
-	item->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	item->AttachToComponent(character->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, character->SocketName);
-}
-
 void AStandItem::Interact(ABaseCharacter* character)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Stand Item"));
@@ -65,7 +48,7 @@ void AStandItem::Interact(ABaseCharacter* character)
 		else 
 		{
 			LaidItem->Owner = character;
-			TakeItem(LaidItem);
+			LaidItem->TakeItemOnStand();
 			LaidItem = nullptr;
 		}
 	}
@@ -74,8 +57,7 @@ void AStandItem::Interact(ABaseCharacter* character)
 		LaidItem = Cast<APickableItem>(character->PossessedObject);
 		if (LaidItem)
 		{
-			LayItem(LaidItem);
+			LaidItem->LayItemOnStand(StaticMesh, SocketName);
 		}
 	}
-
 }

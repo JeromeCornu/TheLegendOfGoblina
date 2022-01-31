@@ -50,6 +50,21 @@ void APickableItem::ThrowItem()
 	TogglePhysicsAndCollision();
 }
 
+void APickableItem::LayItemOnStand(UStaticMeshComponent* Mesh, FName Socket)
+{
+	Owner->PossessedObject = nullptr;
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	SetActorLocationAndRotation(StaticMesh->GetSocketLocation(Socket), StaticMesh->GetSocketQuaternion(Socket));
+	AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Socket);
+}
+
+void APickableItem::TakeItemOnStand()
+{
+	Owner->PossessedObject = this;
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Owner->SocketName);
+}
+
 void APickableItem::Interact(ABaseCharacter* character)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pickable Item"));
