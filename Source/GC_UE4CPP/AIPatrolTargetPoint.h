@@ -13,6 +13,7 @@ UCLASS()
 class GC_UE4CPP_API AAIPatrolTargetPoint : public ATargetPoint
 {
 	GENERATED_BODY()
+
 	
 public:
 	AAIPatrolTargetPoint();

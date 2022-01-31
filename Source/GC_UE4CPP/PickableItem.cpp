@@ -1,5 +1,6 @@
 
 #include "Components/StaticMeshComponent.h"
+#include "BaseCharacter.h"
 #include "PickableItem.h"
 
 // Sets default values
@@ -30,4 +31,49 @@ void APickableItem::TogglePhysicsAndCollision()
 {
 	StaticMesh->SetSimulatePhysics(!StaticMesh->IsSimulatingPhysics());
 	SetActorEnableCollision(!GetActorEnableCollision());
+}
+
+
+void APickableItem::PickUpItem()
+{
+	Owner->PossessedObject = this;
+
+	TogglePhysicsAndCollision();
+	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Owner->SocketName);
+}
+
+void APickableItem::ThrowItem()
+{
+	Owner->PossessedObject = nullptr;
+
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	TogglePhysicsAndCollision();
+}
+
+void APickableItem::Interact(ABaseCharacter* character)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pickable Item"));
+
+	if (character == Owner)
+	{
+		ThrowItem();
+		Owner->InteractableObject = this;
+		Owner = nullptr;
+	}
+	else
+	{
+		if (!Owner)
+		{
+			if (character->PossessedObject)
+			{
+				character->PossessedObject->Interact(character);
+			}
+			else
+			{
+				Owner = character;
+				PickUpItem();
+				Owner->InteractableObject = nullptr;
+			}
+		}
+	}
 }
