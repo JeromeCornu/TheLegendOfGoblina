@@ -2,10 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/InteractInterface.h"
+
 #include "PickableItem.generated.h"
 
+class ABaseCharacter;
+
 UCLASS()
-class GC_UE4CPP_API APickableItem : public AActor
+class GC_UE4CPP_API APickableItem : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
 	
@@ -15,11 +19,20 @@ public:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* StaticMesh;
 
+	ABaseCharacter* Owner;
+
 protected:
 	virtual void BeginPlay() override;
+
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
 	void TogglePhysicsAndCollision();
+
+	void PickUpItem();
+
+	void ThrowItem();
+
+	virtual void Interact(ABaseCharacter* character) override;
 };

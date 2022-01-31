@@ -19,19 +19,8 @@ public:
 
 	APlayerCharacterController();
 
-	UPROPERTY(EditAnywhere, Category = CameraZoom)
-		float ZoomSpeed;
-
-	UPROPERTY(EditAnywhere, Category = CameraZoom)
-		float MinZoom;
-
-	UPROPERTY(EditAnywhere, Category = CameraZoom)
-		float MaxZoom;
-
 protected:
 	APlayableCharacter* MyCharacter;
-
-	USpringArmComponent* CameraBoom;
 
 public:
 	virtual void OnPossess(APawn* InPawn) override;
@@ -40,9 +29,4 @@ public:
 
 	void SetupPlayerInputComponent();
 
-	void MoveForward(float Axis);
-
-	void MoveRight(float Axis);
-
-	void Zoom(float Axis);
 };
