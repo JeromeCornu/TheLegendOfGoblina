@@ -11,11 +11,13 @@ APlayerCharacterController::APlayerCharacterController()
 	ZoomSpeed = 100.0f;
 	MinZoom = 300.0f;
 	MaxZoom = 1000.0f;
+
 }
 
 void APlayerCharacterController::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 // Reference the player character when possessing it

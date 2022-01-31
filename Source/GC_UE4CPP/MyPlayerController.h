@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/HUD.h"
+#include "MyHUD.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -17,11 +19,9 @@ class GC_UE4CPP_API AMyPlayerController : public APlayerController
 
 protected:
 
-	UPROPERTY(EditAnywhere)
-
-		TSubclassOf<UUserWidget> ExampleUIClass;
-
-	UUserWidget* ExampleUI;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		AMyHUD* InGameHUD;
+	
 
 	virtual void BeginPlay() override;
 

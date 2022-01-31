@@ -13,13 +13,5 @@ UCLASS()
 class GC_UE4CPP_API AMainLevel : public ALevelScriptActor
 {
 	GENERATED_BODY()
-public:
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> InGameHUDClass;
 
-
-	UUserWidget* InGameHUD;
-
-protected:
-	virtual void BeginPlay() override;
 };
