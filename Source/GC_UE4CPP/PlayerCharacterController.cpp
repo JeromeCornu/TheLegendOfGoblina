@@ -8,9 +8,7 @@
 
 APlayerCharacterController::APlayerCharacterController()
 {
-	ZoomSpeed = 100.0f;
-	MinZoom = 300.0f;
-	MaxZoom = 1000.0f;
+	
 }
 
 void APlayerCharacterController::BeginPlay()
@@ -28,7 +26,6 @@ void APlayerCharacterController::OnPossess(APawn* InPawn)
 	if (MyCharacter) 
 	{
 		SetupPlayerInputComponent();
-		CameraBoom = MyCharacter->CameraBoom;
 	}
 }
 
@@ -41,45 +38,10 @@ void APlayerCharacterController::SetupPlayerInputComponent()
 	InputComponent->BindAxis("Turn", MyCharacter, &APawn::AddControllerYawInput);
 	InputComponent->BindAxis("LookUp", MyCharacter, &APawn::AddControllerPitchInput);
 
-	InputComponent->BindAxis("MoveForward", this, &APlayerCharacterController::MoveForward);
-	InputComponent->BindAxis("MoveRight", this, &APlayerCharacterController::MoveRight);
+	InputComponent->BindAxis("MoveForward", MyCharacter, &APlayableCharacter::MoveForward);
+	InputComponent->BindAxis("MoveRight", MyCharacter, &APlayableCharacter::MoveRight);
 
-	InputComponent->BindAxis("Zoom", this, &APlayerCharacterController::Zoom);
+	InputComponent->BindAxis("Zoom", MyCharacter, &APlayableCharacter::Zoom);
 
 	InputComponent->BindAction("Interact", IE_Pressed, MyCharacter, &ABaseCharacter::Interact);
-}
-
-// Get the Forward direction from the current rotation of the controller
-void APlayerCharacterController::MoveForward(float Axis)
-{
-	if (!MyCharacter->bDead)
-	{
-		const FRotator Rotation = GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		MyCharacter->AddMovementInput(Direction, Axis);
-	}
-}
-
-// Get the Right direction from the current rotation of the controller
-void APlayerCharacterController::MoveRight(float Axis)
-{
-	if (!MyCharacter->bDead)
-	{
-		const FRotator Rotation = GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		MyCharacter->AddMovementInput(Direction, Axis);
-	}
-}
-
-void APlayerCharacterController::Zoom(float Axis)
-{
-	if (!MyCharacter->bDead && Axis != 0.0f)
-	{
-		float newTargetArmLength = CameraBoom->TargetArmLength - Axis * ZoomSpeed;
-		CameraBoom->TargetArmLength = FMath::Clamp<float>(newTargetArmLength, MinZoom, MaxZoom);
-	}
 }

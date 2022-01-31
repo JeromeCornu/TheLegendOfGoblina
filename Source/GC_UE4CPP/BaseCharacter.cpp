@@ -1,7 +1,6 @@
 
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "InteractiveObjectComponent.h"
 #include "Interfaces/InteractInterface.h"
 #include "BaseCharacter.h"
 

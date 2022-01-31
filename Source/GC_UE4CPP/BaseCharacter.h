@@ -6,7 +6,6 @@
 #include "BaseCharacter.generated.h"
 
 class IInteractInterface;
-class UInteractiveObjectComponent;
 
 UCLASS()
 class GC_UE4CPP_API ABaseCharacter : public ACharacter
