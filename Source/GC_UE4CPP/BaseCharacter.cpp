@@ -2,6 +2,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interfaces/InteractInterface.h"
+#include "CharactersAnimInstance.h"
 #include "BaseCharacter.h"
 
 // Sets default values

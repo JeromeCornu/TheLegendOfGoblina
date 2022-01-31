@@ -2,24 +2,23 @@
 
 
 #include "CharactersAnimInstance.h"
-#include "PlayableCharacter.h"
+#include "BaseCharacter.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
+// Animations of the characters
 UCharactersAnimInstance::UCharactersAnimInstance()
 {
 	// Initialisation of the variables
 	bVictoryRef = false;
 	bFinishRef = false;
 	bCarryRef = false;
-	//Speed = 0.0f;
 }
 
 void UCharactersAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
-	// Faire plutot une ref au BasePlayerCharacter
-	PlayerReference = Cast<APlayableCharacter>(TryGetPawnOwner());
-	//AIReference = Cast<AAIPatrol>(TryGetPawnOwner());
+	// Reference to the BaseCharacter
+	PlayerReference = Cast<ABaseCharacter>(TryGetPawnOwner());
 }
 
 void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -30,39 +29,39 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		UpdateAnimProperties();
 	}
-	// Get all Actors of the PlayableCharacters Class
-	// Not useful for the player character
+	// Get the owning Actors
 	else
 	{
 		AActor* Character = GetOwningActor();
-		PlayerReference = Cast<APlayableCharacter>(Character);
+		PlayerReference = Cast<ABaseCharacter>(Character);
 
 		if (PlayerReference)
 		{
 			UpdateAnimProperties();
 		}
-		//TArray<AActor*> OutActors;
-		//UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), OutActors); // GetOwningActor
-		
-		/*
-		for (AActor* Actor : OutActors)
-		{
-			PlayerReference = Cast<APlayableCharacter>(Actor);
-			if (PlayerReference)
-			{
-				UpdateAnimProperties();
-				break;
-			}
-		}
-		*/
 	}
 }
 
 // Here, variables are uptaded 
 void UCharactersAnimInstance::UpdateAnimProperties()
 {
+	// Test Speed
 	SpeedRef = PlayerReference->GetVelocity().Size();
-	//bCarryRef = PlayerReference
-	// bVictory = PlayerReference->IsItAWin();
-	// bDefeat = PlayerReference->IsItALoose();
+
+	// Test Carry
+	if (PlayerReference)
+	{
+		bCarryRef = true;
+	}
+	else
+	{
+		bCarryRef = false;
+	}
+
+	// Test End
+	if (PlayerReference->bDead)
+	{
+		bFinishRef = true;
+		bVictoryRef = true;
+	}
 }
