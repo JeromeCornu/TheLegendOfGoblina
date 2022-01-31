@@ -3,26 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
 #include "GameFramework/HUD.h"
-#include "MyHUD.h"
-#include "MyPlayerController.generated.h"
+#include "MenuHUD.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
-class GC_UE4CPP_API AMyPlayerController : public APlayerController
+class GC_UE4CPP_API AMenuHUD : public AHUD
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> MenuClass;
 
+
+	UUserWidget* Menu;
 protected:
-
-	
-		AMyHUD* InGameHUD;
-	
-
 	virtual void BeginPlay() override;
-
 };

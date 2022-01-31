@@ -3,26 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
 #include "GameFramework/HUD.h"
-#include "MyHUD.h"
-#include "MyPlayerController.generated.h"
+#include "MyHUD.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
-class GC_UE4CPP_API AMyPlayerController : public APlayerController
+class GC_UE4CPP_API AMyHUD : public AHUD
 {
 	GENERATED_BODY()
-
+public:
+	
+	
 
 protected:
-
-	
-		AMyHUD* InGameHUD;
-	
-
 	virtual void BeginPlay() override;
-
 };

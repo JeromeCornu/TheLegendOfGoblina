@@ -5,6 +5,11 @@
 #include "BaseCharacter.h"
 #include "PlayableCharacter.h"
 #include "PlayerCharacterController.h"
+#include "Blueprint/UserWidget.h"
+#include "MyHUD.h"
+
+
+
 
 APlayerCharacterController::APlayerCharacterController()
 {
@@ -13,7 +18,25 @@ APlayerCharacterController::APlayerCharacterController()
 
 void APlayerCharacterController::BeginPlay()
 {
-	Super::BeginPlay();
+
+	if (!InGameHUDClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("hud class was not defined"));
+		return;
+	}
+
+
+	InGameHUD = CreateWidget(GetWorld(), InGameHUDClass);
+
+	if (!InGameHUD)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("hud Class was not defined"));
+		return;
+	}
+
+	InGameHUD->AddToViewport();
+	InGameHUD->SetVisibility(ESlateVisibility::Visible);
+	
 }
 
 // Reference the player character when possessing it
