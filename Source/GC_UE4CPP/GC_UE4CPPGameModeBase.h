@@ -13,5 +13,20 @@ UCLASS()
 class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+public:
+
+	AGC_UE4CPPGameModeBase();
+	virtual ~AGC_UE4CPPGameModeBase() = default;
+
+	// return the number of steaks in the game
+	UFUNCTION(BlueprintPure, Category = "Steaks")
+		virtual int32 GetSteaks() const;
+
+
+	//setter the number of steaks
+	UFUNCTION(BlueprintCallable, Category = "Steaks")
+		virtual void SetSteaks(int32 newSteaks);
+
 	
+
 };
