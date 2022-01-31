@@ -8,14 +8,16 @@
 UCharactersAnimInstance::UCharactersAnimInstance()
 {
 	// Initialisation of the variables
-	bVictory = false;
-	bDefeat = false;
-	bGrab = false;
+	bVictoryRef = false;
+	bFinishRef = false;
+	bCarryRef = false;
+	//Speed = 0.0f;
 }
 
 void UCharactersAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
+	// Faire plutot une ref au BasePlayerCharacter
 	PlayerReference = Cast<APlayableCharacter>(TryGetPawnOwner());
 	//AIReference = Cast<AAIPatrol>(TryGetPawnOwner());
 }
@@ -32,9 +34,17 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	// Not useful for the player character
 	else
 	{
-		TArray<AActor*> OutActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), OutActors);
+		AActor* Character = GetOwningActor();
+		PlayerReference = Cast<APlayableCharacter>(Character);
 
+		if (PlayerReference)
+		{
+			UpdateAnimProperties();
+		}
+		//TArray<AActor*> OutActors;
+		//UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), OutActors); // GetOwningActor
+		
+		/*
 		for (AActor* Actor : OutActors)
 		{
 			PlayerReference = Cast<APlayableCharacter>(Actor);
@@ -44,13 +54,15 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 				break;
 			}
 		}
+		*/
 	}
 }
 
 // Here, variables are uptaded 
 void UCharactersAnimInstance::UpdateAnimProperties()
 {
-	Speed = PlayerReference->GetVelocity().Size();
+	SpeedRef = PlayerReference->GetVelocity().Size();
+	//bCarryRef = PlayerReference
 	// bVictory = PlayerReference->IsItAWin();
 	// bDefeat = PlayerReference->IsItALoose();
 }

@@ -29,16 +29,16 @@ protected:
 		class AAIPatrol* AIReference;
 	*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		float Speed;
+		float SpeedRef;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		float bVictory;
+		float bVictoryRef;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		float bDefeat;
+		float bFinishRef;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		float bGrab;
+		float bCarryRef;
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 		virtual void UpdateAnimProperties();
