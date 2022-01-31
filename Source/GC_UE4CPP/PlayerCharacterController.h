@@ -7,6 +7,7 @@
 
 class APlayableCharacter;
 class USpringArmComponent;
+class AHUD;
 
 UCLASS()
 class GC_UE4CPP_API APlayerCharacterController : public APlayerController
@@ -15,7 +16,12 @@ class GC_UE4CPP_API APlayerCharacterController : public APlayerController
 
 public:
 	
-	
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> InGameHUDClass;
+
+
+	UUserWidget* InGameHUD;
+		
 
 	APlayerCharacterController();
 

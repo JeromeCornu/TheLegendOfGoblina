@@ -19,7 +19,7 @@ class GC_UE4CPP_API AMyPlayerController : public APlayerController
 
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	
 		AMyHUD* InGameHUD;
 	
 

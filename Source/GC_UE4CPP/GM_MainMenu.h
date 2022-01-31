@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/LevelScriptActor.h"
-#include "MainLevel.generated.h"
+#include "GameFramework/GameModeBase.h"
+#include "GM_MainMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GC_UE4CPP_API AMainLevel : public ALevelScriptActor
+class GC_UE4CPP_API AGM_MainMenu : public AGameModeBase
 {
 	GENERATED_BODY()
-
+	
 };

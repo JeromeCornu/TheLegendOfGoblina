@@ -14,11 +14,8 @@ class GC_UE4CPP_API AMyHUD : public AHUD
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> InGameHUDClass;
-
-
-	UUserWidget* InGameHUD;
+	
+	
 
 protected:
 	virtual void BeginPlay() override;
