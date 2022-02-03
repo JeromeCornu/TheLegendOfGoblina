@@ -6,32 +6,31 @@
 #include "GameFramework/Actor.h"
 #include "Interfaces/InteractInterface.h"
 
-#include "StandItem.generated.h"
+#include "ObjectiveItem.generated.h"
 
-class ABaseCharacter;
-class ATargetPoint;
 class APickableItem;
 
 UCLASS()
-class GC_UE4CPP_API AStandItem : public AActor, public IInteractInterface
+class GC_UE4CPP_API AObjectiveItem : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AStandItem();
-
+	AObjectiveItem();
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere)
 		FName SocketName;
-	
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<ATargetPoint> TargetPointClass;
 
-	APickableItem* LaidItem;
+	UPROPERTY(EditAnywhere)
+		int32 DestroyDelay;
+
+	FTimerHandle TriggerDestroyTimerHandle;
+
+	APickableItem* Item;
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,4 +41,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void Interact(ABaseCharacter* character) override;
+
+	UFUNCTION()
+		void TriggerDestroy();
 };

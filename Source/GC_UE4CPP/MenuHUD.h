@@ -3,23 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/LevelScriptActor.h"
-#include "MainLevel.generated.h"
+#include "GameFramework/HUD.h"
+#include "MenuHUD.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GC_UE4CPP_API AMainLevel : public ALevelScriptActor
+class GC_UE4CPP_API AMenuHUD : public AHUD
 {
 	GENERATED_BODY()
+
 public:
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> InGameHUDClass;
+		TSubclassOf<UUserWidget> MenuClass;
 
 
-	UUserWidget* InGameHUD;
-
+	UUserWidget* Menu;
 protected:
 	virtual void BeginPlay() override;
 };

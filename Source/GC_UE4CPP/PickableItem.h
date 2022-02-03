@@ -34,5 +34,9 @@ public:
 
 	void ThrowItem();
 
+	void LayItemOnStand(UStaticMeshComponent* Mesh, FName Socket);
+
+	void TakeItemOnStand();
+
 	virtual void Interact(ABaseCharacter* character) override;
 };

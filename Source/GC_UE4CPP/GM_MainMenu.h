@@ -3,20 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/HUD.h"
-#include "MyHUD.generated.h"
+#include "GameFramework/GameModeBase.h"
+#include "GM_MainMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GC_UE4CPP_API AMyHUD : public AHUD
+class GC_UE4CPP_API AGM_MainMenu : public AGameModeBase
 {
 	GENERATED_BODY()
-public:
 	
-	
-
-protected:
-	virtual void BeginPlay() override;
 };

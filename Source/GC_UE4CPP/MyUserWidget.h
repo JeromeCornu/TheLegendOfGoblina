@@ -46,5 +46,5 @@ protected:
 	UFUNCTION()
 		void OnQuitButtonClicked();
 
-	
+	    
 };
