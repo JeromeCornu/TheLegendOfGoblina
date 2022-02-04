@@ -13,7 +13,7 @@
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
 	GameStateClass = AMyGameStateBase::StaticClass();
-	InGameHUD = Cast<UInGameUserWidgetclass>(GetObjectsOfClass);
+	//InGameHUD = Cast<UInGameUserWidgetclass>();
 	
 }
 
