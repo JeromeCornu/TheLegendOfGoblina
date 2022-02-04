@@ -6,6 +6,7 @@
 #include "EndScreen.h"
 #include "Blueprint/UserWidget.h"
 #include "InGameUserWidgetClass.h"
+#include "Kismet/GameplayStatics.h"
 
 
 
@@ -69,12 +70,51 @@ void AGC_UE4CPPGameModeBase::Victory()
 	
 }
 
+//when the player take a steak update the UI
 void AGC_UE4CPPGameModeBase::GetaSteak()
 {
 	int32 Temp = GetSteaks();
-	Temp += 1;
-	SetSteaks(Temp);
-	InGameHUD->SetPercentage(GetSteaks());
+	if (Temp == 5)
+	{
+		Victory();
+	}
+	else
+	{
+		Temp += 1;
+		SetSteaks(Temp);
+		InGameHUD->SetPercentage(GetSteaks());
+	}
+	
+}
+
+void AGC_UE4CPPGameModeBase::PauseGame()
+{
+	if (!GameIsPaused)
+	{
+		if (!PauseScreenClass)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
+			return;
+		}
+
+		EndScreen = CreateWidget(GetWorld(), PauseScreenClass);
+
+		if (!PauseScreen)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Menu Class was not defined"));
+			return;
+		}
+
+		PauseScreen->AddToViewport();
+		PauseScreen->SetVisibility(ESlateVisibility::Visible);
+
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	}
+	else
+	{
+
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
+	}
 }
 
 

@@ -33,15 +33,24 @@ public:
 		void Lose();
 	UFUNCTION()
 		void Victory();
-
 	UFUNCTION()
 		void GetaSteak();
+	UFUNCTION()
+		void PauseGame();
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> EndScreenClass;
 
 	UUserWidget* EndScreen;
-	
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> PauseScreenClass;
+
+	UUserWidget* PauseScreen;
+
+
+private:
+	bool GameIsPaused = false;
 
 	
 
