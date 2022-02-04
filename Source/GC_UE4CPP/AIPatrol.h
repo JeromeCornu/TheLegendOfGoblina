@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "AIPatrol.generated.h"
 
 UCLASS()
-class GC_UE4CPP_API AAIPatrol : public ACharacter
+class GC_UE4CPP_API AAIPatrol : public ABaseCharacter
 {
 	GENERATED_BODY()
 

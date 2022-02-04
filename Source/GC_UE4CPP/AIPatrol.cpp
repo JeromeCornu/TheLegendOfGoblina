@@ -29,6 +29,12 @@ AAIPatrol::AAIPatrol()
 	// Connect the overlapping function to the sphere component 
 	MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAIPatrol::OnPlayerCatch);
 	
+
+	AAIPatrolController* AIController = Cast<AAIPatrolController>(this->GetController());
+	if (AIController)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, TEXT("CAST SUCCESSFUL"));
+	}
 }
 
 void AAIPatrol::BeginPlay()
@@ -59,6 +65,7 @@ void AAIPatrol::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+// The player has been catch
 void AAIPatrol::OnPlayerCaught(APawn* Pawn)
 {
 	// Get a reference to the actor controller

@@ -4,6 +4,7 @@
 #include "AIPatrolController.h"
 #include "AIPatrol.h"
 #include "AIPatrolTargetPoint.h"
+#include "BTPickUpMeat.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -24,7 +25,16 @@ AAIPatrolController::AAIPatrolController()
 	CurrentPatrolPoint = 0;
 }
 
-// The player is caught -> set a key on the blackboard
+void AAIPatrolController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Initialize the BehaviorTree's value : PossessMeat
+	bool bValue = true;
+	BlackboardComp->SetValueAsBool("PossessMeat", bValue);
+}
+
+// The player has been see -> set a key on the blackboard
 void AAIPatrolController::SetPlayerCaught(APawn* _Pawn)
 {
 	if (BlackboardComp)

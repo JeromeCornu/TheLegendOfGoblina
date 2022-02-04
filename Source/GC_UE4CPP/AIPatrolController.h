@@ -46,4 +46,7 @@ public:
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const { return BlackboardComp; }
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const { return PatrolPoints; }
 	// FORCEINLINE --> forces compiler to do inline unconditionally
+
+	UFUNCTION()
+		virtual void BeginPlay();
 };
