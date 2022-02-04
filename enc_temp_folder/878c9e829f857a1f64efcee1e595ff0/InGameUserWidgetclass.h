@@ -15,12 +15,8 @@ UCLASS()
 class GC_UE4CPP_API UInGameUserWidgetclass : public UUserWidget
 {
 	GENERATED_BODY()
-
 public: 
 	class AGC_UE4CPPGameModeBase* GameMode;
-
-	UFUNCTION()
-		void SetPercentage(int32 Percent);
 
 protected:
 

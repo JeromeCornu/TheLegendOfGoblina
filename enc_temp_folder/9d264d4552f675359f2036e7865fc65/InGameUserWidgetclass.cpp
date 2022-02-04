@@ -3,11 +3,6 @@
 
 #include "InGameUserWidgetclass.h"
 
-void UInGameUserWidgetclass::SetPercentage(int32 Percent)
-{
-	SteaksBar->SetPercent(Percent);
-}
-
 void UInGameUserWidgetclass::NativeConstruct()
 {
 	if (SteaksBar)

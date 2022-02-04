@@ -13,7 +13,7 @@ UCLASS()
 class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	class UInGameUserWidgetclass* InGameHUD;
+
 		
 public:
 
@@ -34,15 +34,11 @@ public:
 	UFUNCTION()
 		void Victory();
 
-	UFUNCTION()
-		void GetaSteak();
-
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> EndScreenClass;
 
-	UUserWidget* EndScreen;
-	
 
+	UUserWidget* EndScreen;
 	
 
 };

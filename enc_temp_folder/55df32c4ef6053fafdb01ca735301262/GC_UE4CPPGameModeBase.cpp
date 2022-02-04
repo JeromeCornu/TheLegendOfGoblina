@@ -5,7 +5,6 @@
 #include "MyGameStateBase.h"
 #include "EndScreen.h"
 #include "Blueprint/UserWidget.h"
-#include "InGameUserWidgetClass.h"
 
 
 
@@ -13,7 +12,7 @@
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
 	GameStateClass = AMyGameStateBase::StaticClass();
-	InGameHUD = Cast<UInGameUserWidgetclass>(GetObjectsOfClass);
+	
 	
 }
 
@@ -45,7 +44,7 @@ void AGC_UE4CPPGameModeBase::Lose()
 
 	EndScreen->AddToViewport();
 	EndScreen->SetVisibility(ESlateVisibility::Visible);
-	
+	//UserWidgetEndScreen->ChangeText(FString(TEXT("YOU LOST")));
 }
 
 void AGC_UE4CPPGameModeBase::Victory()
@@ -66,15 +65,5 @@ void AGC_UE4CPPGameModeBase::Victory()
 
 	EndScreen->AddToViewport();
 	EndScreen->SetVisibility(ESlateVisibility::Visible);
-	
+	//UserWidgetEndScreen->ChangeText(FString(TEXT("YOU WON")));
 }
-
-void AGC_UE4CPPGameModeBase::GetaSteak()
-{
-	int32 Temp = GetSteaks();
-	Temp += 1;
-	SetSteaks(Temp);
-	InGameHUD->SetPercentage(GetSteaks());
-}
-
-
