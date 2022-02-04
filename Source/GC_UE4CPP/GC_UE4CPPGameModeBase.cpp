@@ -89,6 +89,8 @@ void AGC_UE4CPPGameModeBase::GetaSteak()
 
 void AGC_UE4CPPGameModeBase::PauseGame()
 {
+	// if the game is not paused we create a widget 
+	// if not we remove the widget
 	if (!GameIsPaused)
 	{
 		if (!PauseScreenClass)
@@ -112,7 +114,7 @@ void AGC_UE4CPPGameModeBase::PauseGame()
 	}
 	else
 	{
-
+	PauseScreen->RemoveFromViewport();
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
 	}
 }
