@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "AIPatrol.generated.h"
 
 UCLASS()
-class GC_UE4CPP_API AAIPatrol : public ACharacter
+class GC_UE4CPP_API AAIPatrol : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -24,27 +24,27 @@ public:
 	UPROPERTY(EditAnywhere, Category = "IA")
 		class UBehaviorTree* BehaviorTree;
 
+	// Detection of the player
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		class UPawnSensingComponent* PawnSensingComp;
 
-	// la
+	// Collision sphere to detect when the player has been catch
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		class USphereComponent* MyCollisionSphere;
 
-	UPROPERTY(VisibleAnywhere, Category = "AI")
-		class UStaticMeshComponent* MyMesh;
-
+	// Size of the sphere collision
 	float SphereRadius;
-	// a la
 
 
 private:
 
+	// Called when the player has been see
 	UFUNCTION()
 		void OnPlayerCaught(APawn* Pawn);
 
+	// Called when the player has been touch
 	UFUNCTION()
-		void OnPlayerGrab(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 
 };

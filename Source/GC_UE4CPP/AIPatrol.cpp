@@ -6,6 +6,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "Perception/PawnSensingComponent.h"
 #include "DrawDebugHelpers.h"
+#include "PlayableCharacter.h"
 #include "Components/SphereComponent.h"
 
 
@@ -14,7 +15,8 @@ AAIPatrol::AAIPatrol()
 {
 	// Initialize Senses
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
-	PawnSensingComp->SetPeripheralVisionAngle(90.f);
+	PawnSensingComp->SetPeripheralVisionAngle(67.5f); // 90.f = angle de 180°	donc	67.5f = angle de 135°
+
 
 	// Collision Sphere's setup
 	SphereRadius = 150.0f;
@@ -25,7 +27,14 @@ AAIPatrol::AAIPatrol()
 	MyCollisionSphere->SetupAttachment(RootComponent);
 
 	// Connect the overlapping function to the sphere component 
-	MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAIPatrol::OnPlayerGrab);
+	MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAIPatrol::OnPlayerCatch);
+	
+
+	AAIPatrolController* AIController = Cast<AAIPatrolController>(this->GetController());
+	if (AIController)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, TEXT("CAST SUCCESSFUL"));
+	}
 }
 
 void AAIPatrol::BeginPlay()
@@ -46,7 +55,8 @@ void AAIPatrol::Tick(float DeltaTime)
 
 	DrawDebugSphere(GetWorld(), GetActorLocation(), SphereRadius, 20, FColor::Purple, false, -1, 0, 1);
 }
-//  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * !!! END DEBUG !!! * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+//  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * !!! END DEBUG !!! * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
 
 void AAIPatrol::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -55,24 +65,28 @@ void AAIPatrol::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+// The player has been catch
 void AAIPatrol::OnPlayerCaught(APawn* Pawn)
 {
-	// Get a reference to the player controller
+	// Get a reference to the actor controller
 	AAIPatrolController* AIController = Cast<AAIPatrolController>(GetController());
 
 	// Cast succesful ?
 	if (AIController)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("You have been see!"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("You have been seen!"));
 		// Call the function SetPlayerCaught in AIPatrolController
 		AIController->SetPlayerCaught(Pawn);
 	}
 }
 
-void AAIPatrol::OnPlayerGrab(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AAIPatrol::OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// Get a reference to the player
+	APlayableCharacter* PlayerReference = Cast<APlayableCharacter>(OtherActor);
+
 	// If the player has been grab -> play defeat
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	if (PlayerReference)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Gotcha !"));
 	}

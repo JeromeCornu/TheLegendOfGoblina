@@ -4,24 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTSelectPatrolPoint.generated.h"
+#include "BTPickUpMeat.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class GC_UE4CPP_API UBTSelectPatrolPoint : public UBTTaskNode
+class GC_UE4CPP_API UBTPickUpMeat : public UBTTaskNode
 {
 	GENERATED_BODY()
 
 		// EBTNodeResult -> like boolean but with other possibilities of return (like : succeeded, failed)
 		virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
-public: 
+public:
 
-	UPROPERTY(EditAnywhere, Category = "Road")
-		bool Occupied = true;
+	// True if the Actor Possess a meat, false if not
+	UPROPERTY(EditAnywhere)
+		bool bPossessMeatOrNot;
 
-	UPROPERTY(VisibleAnywhere, Category = "Road")
-		bool FirstTime = true;
+	UFUNCTION()
+		void SetPossessMeat(bool value);
 };

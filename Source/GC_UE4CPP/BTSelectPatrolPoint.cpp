@@ -6,7 +6,7 @@
 #include "AIPatrolController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-// Road to follow
+// One array with all points -> go to one of them randomly -> if (occupied) : repeat / else () : go to first point 
 EBTNodeResult::Type UBTSelectPatrolPoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AAIPatrolController* AICon = Cast<AAIPatrolController>(OwnerComp.GetAIOwner());
@@ -24,16 +24,28 @@ EBTNodeResult::Type UBTSelectPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 			// Next point
 		AAIPatrolTargetPoint* NextPatrolPoint = nullptr;
 
-		
-		// if there are more target points to go to
-		if (AICon->CurrentPatrolPoint != AvailablePatrolPoints.Num() - 1)
+			// Get first point of the array of AAIPatrolTargetPoint
+		AAIPatrolTargetPoint* FirstPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[0]);
+			// Remove first point from the array
+		AvailablePatrolPoints.Remove(FirstPoint);
+
+		// Size of the array
+		int32 ArrayLenght = AvailablePatrolPoints.Num();
+		UE_LOG(LogTemp, Warning, TEXT("%d"), ArrayLenght);
+
+
+		// if the place is occuiped by an aliment
+		if (Occupied == true || FirstTime == true)
 		{
-			NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[++AICon->CurrentPatrolPoint]); // -> go to the next point
+			AICon->CurrentPatrolPoint = rand() % ArrayLenght - 1;
+			NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[++AICon->CurrentPatrolPoint]); // -> go to the next random point
+			FirstTime = false;
 		}
-		// if there are no more target to go to 
+		// if the place is free
 		else
 		{
-			NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[0]); // -> return to the first point
+			// Put the aliment
+			NextPatrolPoint = FirstPoint; // -> return to the first point
 			AICon->CurrentPatrolPoint = 0; // current point = the first
 		}
 
