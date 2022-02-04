@@ -24,10 +24,12 @@ protected:
 	// References to our characters
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		class ABaseCharacter* PlayerReference;
-	/*
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		class AAIPatrol* AIReference;
-	*/
+
+//Animation variable targeting the Character
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		float SpeedRef;
 
@@ -39,6 +41,21 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bCarryRef;
+
+////Animation variable targeting the AI
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+		float SpeedRefAI;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+		bool bVictoryRefAI;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+		bool bFinishRefAI;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+		bool bCarryRefAI;
+
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 		virtual void UpdateAnimProperties();
