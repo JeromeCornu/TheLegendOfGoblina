@@ -14,10 +14,6 @@
 // Result of beeing see + connection with the BB and the BT
 AAIPatrolController::AAIPatrolController()
 {
-	// Initialize blackboard abnd behavior tree
-	BehaviorComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorComp"));
-	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
-
 	// Initialize blackboard keys
 	PlayerKey = "Player";
 	LocationToGoKey = "LocationToGo";
@@ -25,21 +21,12 @@ AAIPatrolController::AAIPatrolController()
 	CurrentPatrolPoint = 0;
 }
 
-void AAIPatrolController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// Initialize the BehaviorTree's value : PossessMeat
-	bool bValue = true;
-	BlackboardComp->SetValueAsBool("PossessMeat", bValue);
-}
-
 // The player has been see -> set a key on the blackboard
 void AAIPatrolController::SetPlayerCaught(APawn* _Pawn)
 {
-	if (BlackboardComp)
+	if (Blackboard)
 	{
-		BlackboardComp->SetValueAsObject(PlayerKey, _Pawn);
+		Blackboard->SetValueAsObject(PlayerKey, _Pawn);
 	}
 }
 
@@ -53,15 +40,38 @@ void AAIPatrolController::OnPossess(APawn* InPawn)
 	// Cast succesful ?
 	if (AICharacter) 
 	{
-		if (AICharacter->BehaviorTree->BlackboardAsset)
-		{
-			BlackboardComp->InitializeBlackboard(*(AICharacter->BehaviorTree->BlackboardAsset));
-		}
+		RunBehaviorTree(AICharacter->BehaviorTree);
+
+		// Initialize the BehaviorTree's value : PossessMeat
+		bool bValue = true;
+		Blackboard->SetValueAsBool("PossessMeat", bValue);
+
+
 
 		// Populate patrol point array (make an array with all point that are in the game)
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolTargetPoint::StaticClass(), PatrolPoints);
-		
-		BehaviorComp->StartTree(*AICharacter->BehaviorTree);
 
+
+
+		GetAllPoints();
+
+
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("PossessMeat"));
 	}
+}
+
+TArray<AActor*> AAIPatrolController::GetAllPoints()
+{
+	// Get all points available
+	TArray<AActor*> AvailablePatrolPoints = GetPatrolPoints();
+
+	// Get first point of the array : AAIPatrolTargetPoint, remove it and set it as the ExitPoint
+	AAIPatrolTargetPoint* ExitPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[0]);
+	// Remove first point from the array
+	AvailablePatrolPoints.Remove(ExitPoint);
+	// Set the variable FirstPoint of the BT
+	Blackboard->SetValueAsObject("ExitPoint", ExitPoint);
+
+	return AvailablePatrolPoints;
 }
