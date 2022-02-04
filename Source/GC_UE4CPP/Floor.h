@@ -11,6 +11,8 @@ class Floor
 {
 public:
 	Floor();
+	Floor(int32 GridSizeX, int32 GridSizeY, int32 NodeMinX, int32 NodeMinY, float SplitChanceFactor);
+
 	~Floor();
 
 	// Function called to split the floor
@@ -32,9 +34,9 @@ public:
 	void SplitVertical(TSharedPtr<FloorNode> InA, TSharedPtr<FloorNode> InB, TSharedPtr<FloorNode> InC);
 
 	// Draw helpers
-	void DrawFloorNodes(class UWorld* World);
+	void DrawFloorNodes(class UWorld* World, FVector Offset, float UnitLength, float GridHeight, float Thickness);
 
-	void DrawFloorNode(class UWorld* World, FCornerCoordinates coordinates);
+	void DrawFloorNode(class UWorld* World, FCornerCoordinates coordinates, FVector Offset, float UnitLength, float GridHeight, float Thickness);
 
 	// Get the partitioned floor grid
 	FORCEINLINE TArray<TSharedPtr<FloorNode>> GetPartitionedFloor() const { return PartitionedFloor; }
@@ -53,12 +55,6 @@ private:
 	// Minimal node size
 	int32 RoomMinX;
 	int32 RoomMinY;
-
-	// World length of our grid's unit
-	float UnitLength;
-
-	// Draw helpers grid height
-	float GridHeight;
 
 	// Factor that allows us to control the chance of split on nodes
 	float SplitChance;

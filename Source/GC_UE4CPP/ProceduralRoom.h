@@ -4,7 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "FloorNode.h"
+
 #include "ProceduralRoom.generated.h"
+
+enum class EWallOrientation
+{
+	EWO_Upper,
+	EWO_Lower,
+	EWO_Right,
+	EWO_Left
+};
+
+class Floor;
+class UBoxComponent;
 
 UCLASS()
 class GC_UE4CPP_API AProceduralRoom : public AActor
@@ -19,37 +32,84 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-
 private:
+
+	void BuildEmptyRoom();
+
+	void BuildWallOnFloor(const FVector& FloorLocation, EWallOrientation Orientation);
+
+	FVector GetRandomPointInSquare(const FVector& UpperLeft, const FVector& LowerRight);
+
+	void SpawnItemInNode(const FCornerCoordinates& Coordinates);
+
+	void SpawnItemsInGrid(TSharedPtr<Floor> FloorGrid);
+	
+	UPROPERTY(VisibleAnywhere)
+		UInstancedStaticMeshComponent* FloorHISMC;
+	
+	UPROPERTY(VisibleAnywhere)
+		UInstancedStaticMeshComponent* ObstaclesHISMC;
+	
+	UPROPERTY(VisibleAnywhere)
+		UInstancedStaticMeshComponent* WallsHISMC;
+	
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> StandClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float FloorWidth;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		UStaticMeshComponent* FloorMesh;
+		float FloorHeight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AActor> CrateClass;
+		float ObstacleWidth;
 
-	void SpawnItem(UClass* ItemToSpawn);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float ObstaclesDensity;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float NodeWidth;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float SplitFactor;
 
-	float SquareWidth;
-	float GridHeight;
-	float RoomLength;
-	float RoomWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float RoomLength;
 
-	FVector TopLeft;
-	FVector BottomRight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float RoomWidth;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float NumberOfStands;
+
+	float FloorRadius;
+
+	int32 NbFloorTilesX;
+	int32 NbFloorTilesY;
+
+
+	float ObstacleRadius;
 
 	int32 GridSizeX;
 	int32 GridSizeY;
 
-	float Radius;
+	// Draw helpers grid height
+	float GridHeight;
 
-	void CreateGrid();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float OffsetY;
 
-	FVector GetRandomPointInSquare(const FVector& UpperLeft, const FVector& LowerRight);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float WallHeight;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+		float WallHorizontalOffset;
 
-	void PlacePointsOnGrid();
+	int32 SafeZoneIndex;
+
+	FVector Offset;
+
 };

@@ -10,11 +10,20 @@ Floor::Floor()
 	RoomMinX = 1;
 	RoomMinY = 1;
 
-	UnitLength = 140.f;
-
-	GridHeight = 1.f;
-
 	SplitChance = 1.25f;
+
+	UE_LOG(LogTemp, Warning, TEXT("Floor created"));
+}
+
+Floor::Floor(int32 GridSizeX, int32 GridSizeY, int32 NodeMinX, int32 NodeMinY, float SplitChanceFactor)
+{
+	FloorGridSizeX = GridSizeX;
+	FloorGridSizeY = GridSizeY;
+
+	RoomMinX = NodeMinX;
+	RoomMinY = NodeMinY;
+
+	SplitChance = SplitChanceFactor;
 
 	UE_LOG(LogTemp, Warning, TEXT("Floor created"));
 }
@@ -180,24 +189,29 @@ void Floor::SplitVertical(TSharedPtr<FloorNode> InA, TSharedPtr<FloorNode> InB, 
 	FloorNodeStack.Push(InC);
 }
 
-void Floor::DrawFloorNodes(UWorld* World)
+void Floor::DrawFloorNodes(UWorld* World, FVector Offset, float UnitLength, float GridHeight, float Thickness)
 {
 	for (int32 i = 0; i < PartitionedFloor.Num(); i++) 
 	{
 		FCornerCoordinates Coordinates = PartitionedFloor[i]->GetCornerCoordinates();
-		DrawFloorNode(World, Coordinates);
+		DrawFloorNode(World, Coordinates, Offset, UnitLength, GridHeight, Thickness);
 	}
 }
 
-void Floor::DrawFloorNode(UWorld* World, FCornerCoordinates coordinates)
+void Floor::DrawFloorNode(UWorld* World, FCornerCoordinates coordinates, FVector Offset, float UnitLength, float GridHeight, float Thickness)
 {
-	const FVector UpperLeft(coordinates.UpperLeftX * UnitLength, coordinates.UpperLeftY * UnitLength, GridHeight);
-	const FVector UpperRight(coordinates.LowerRightX * UnitLength, coordinates.UpperLeftY * UnitLength, GridHeight);
-	const FVector LowerLeft(coordinates.UpperLeftX * UnitLength, coordinates.LowerRightY * UnitLength, GridHeight);
-	const FVector LowerRight(coordinates.LowerRightX * UnitLength, coordinates.LowerRightY * UnitLength, GridHeight);
+	FVector UpperLeft(coordinates.UpperLeftX * UnitLength, coordinates.UpperLeftY * UnitLength, GridHeight);
+	FVector UpperRight(coordinates.LowerRightX * UnitLength, coordinates.UpperLeftY * UnitLength, GridHeight);
+	FVector LowerLeft(coordinates.UpperLeftX * UnitLength, coordinates.LowerRightY * UnitLength, GridHeight);
+	FVector LowerRight(coordinates.LowerRightX * UnitLength, coordinates.LowerRightY * UnitLength, GridHeight);
 
-	DrawDebugLine(World, UpperLeft, UpperRight, FColor::Blue, true, -1, 0, 3.f);
-	DrawDebugLine(World, UpperRight, LowerRight, FColor::Blue, true, -1, 0, 3.f);
-	DrawDebugLine(World, LowerRight, LowerLeft, FColor::Blue, true, -1, 0, 3.f);
-	DrawDebugLine(World, LowerLeft, UpperLeft, FColor::Blue, true, -1, 0, 3.f);
+	UpperLeft += Offset;
+	UpperRight += Offset;
+	LowerLeft += Offset;
+	LowerRight += Offset;
+
+	DrawDebugLine(World, UpperLeft, UpperRight, FColor::Blue, true, -1, 0, Thickness);
+	DrawDebugLine(World, UpperRight, LowerRight, FColor::Blue, true, -1, 0, Thickness);
+	DrawDebugLine(World, LowerRight, LowerLeft, FColor::Blue, true, -1, 0, Thickness);
+	DrawDebugLine(World, LowerLeft, UpperLeft, FColor::Blue, true, -1, 0, Thickness);
 }
