@@ -35,6 +35,9 @@ ABaseCharacter::ABaseCharacter()
 	
 	InteractableObject = nullptr;
 	PossessedObject = nullptr;	
+
+	//variable for the animation
+	bCarry = false;
 }
 
 // Called when the game starts or when spawned
@@ -59,6 +62,7 @@ void ABaseCharacter::Interact()
 	if (!bDead)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("E pressed"));
+		bCarry = true;
 
 		if (InteractableObject) 
 		{
@@ -66,6 +70,7 @@ void ABaseCharacter::Interact()
 		}
 		else if (PossessedObject)
 		{
+			bCarry = false;
 			PossessedObject->Interact(this);
 		}
 	}

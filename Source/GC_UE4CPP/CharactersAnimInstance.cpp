@@ -56,10 +56,13 @@ void UCharactersAnimInstance::UpdateAnimProperties()
 {
 	// Test Speed
 	SpeedRef = PlayerReference->GetVelocity().Size();
-	//SpeedRefAI = AIReference->GetVelocity().Size();
+	if (SpeedRefAI)
+	{
+		SpeedRefAI = AIReference->GetVelocity().Size();
+	}
 
 	// Test Carry a revoir 
-	if (PlayerReference)
+	if (PlayerReference->bCarry)
 	{
 		bCarryRef = true;
 	}
