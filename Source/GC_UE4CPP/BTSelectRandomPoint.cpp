@@ -42,8 +42,3 @@ EBTNodeResult::Type UBTSelectRandomPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 	return EBTNodeResult::Failed;
 }
 
-void UBTSelectRandomPoint::GetFirstPoint()
-{
-
-}
-
