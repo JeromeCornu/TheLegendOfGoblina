@@ -3,9 +3,11 @@
 
 #include "ProceduralRoom.h"
 #include "DrawDebugHelpers.h"
-#include "Floor.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Floor.h"
+#include "StandItem.h"
+#include "PatrolSpawnerDoor.h"
 
 // Sets default values
 AProceduralRoom::AProceduralRoom()
@@ -26,21 +28,22 @@ AProceduralRoom::AProceduralRoom()
 	WallsHISMC->SetMobility(EComponentMobility::Static);
 	
 
-	ObstacleWidth = 140.f;
-	ObstaclesDensity = 0.4f;
-
-	NodeWidth = 140.f;
+	RoomTargetLength = 2000.f;
+	RoomTargetWidth = 2000.f;
+	CorridorsTargetWidth = 200.f;
+	UnitNodeWidth = 140.f;
 	SplitFactor = 2.5f;
-
-	RoomLength = 2000.f;
-	RoomWidth = 2000.f;
-
-	GridHeight = 5.f;
+	ObstaclesDensity = 0.4f;
+	NumberOfStands = 10;
+	SafeZoneAccessSize = 2;
+	PatrolSpawnSize = 3;
+	bDrawDebugGrid = false;
+	DebugGridHeight = 5.f;
 
 	FloorWidth = 200.f; 
 	FloorHeight = 10.f;
-
-	OffsetY = 0.f;
+	ObstacleWidth = 140.f;
+	ObstacleHeight = 130.f;
 	WallHorizontalOffset = 80.f;
 	WallHeight = 100.f;
 }
@@ -50,56 +53,65 @@ void AProceduralRoom::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FloorRadius = FloorWidth / 2.f;
-	NbFloorTilesX = (int32)(RoomLength / FloorWidth);
-	NbFloorTilesY = (int32)(RoomWidth / FloorWidth);
-
-	SafeZoneIndex = FMath::RandRange(0, NbFloorTilesY - 2);
-	OffsetY = NodeWidth - (SafeZoneIndex + 1) * FloorWidth;
-	UE_LOG(LogTemp, Warning, TEXT("**************************************** SafeZoneIndex: %d"), SafeZoneIndex);
-
-	if (NodeWidth < ObstacleWidth) 
-	{
-		NodeWidth = ObstacleWidth;
-	}
-
-	ObstacleRadius = ObstacleWidth / 2.f;
-	GridSizeX = (int32)((RoomLength - 2 * NodeWidth) / NodeWidth);
-	GridSizeY = (int32)((RoomWidth - 2 * NodeWidth) / NodeWidth);
-
-	Offset = FVector(NodeWidth, OffsetY, 0.f);
+	SetupConstrainedParameters();
 
 	BuildEmptyRoom();
 
-	TSharedPtr<Floor> TheFloor(new Floor(GridSizeX, GridSizeY, 1, 1, SplitFactor));
+	FillProceduralRoom();
+}
 
-	TheFloor->Partition();
-	TheFloor->DrawFloorNodes(GetWorld(), Offset, NodeWidth, GridHeight, 4.f);
+void AProceduralRoom::SetupConstrainedParameters() 
+{
+	if (UnitNodeWidth < ObstacleWidth) 
+	{
+		UnitNodeWidth = ObstacleWidth;
+	}
 
-	SpawnItemsInGrid(TheFloor);
+	NbFloorTilesX = (int32)(RoomTargetLength / FloorWidth);
+	NbFloorTilesY = (int32)(RoomTargetWidth / FloorWidth);
+
+	float RoomRealLength = NbFloorTilesX * FloorWidth;
+	float RoomRealWidth = NbFloorTilesY * FloorWidth;
+
+	GridSizeX = (int32)((RoomRealLength - 2 * CorridorsTargetWidth) / UnitNodeWidth);
+	GridSizeY = (int32)((RoomRealWidth - 2 * CorridorsTargetWidth) / UnitNodeWidth);
+
+	CorridorsWidthX = (RoomRealLength - GridSizeX * UnitNodeWidth) / 2.f;
+	CorridorsWidthY = (RoomRealWidth - GridSizeY * UnitNodeWidth) / 2.f;
+
+	SafeZoneIndex = FMath::RandRange(0, NbFloorTilesY - SafeZoneAccessSize);
+	float OffsetY = CorridorsWidthY - (SafeZoneIndex + 1) * FloorWidth;
+	RoomOffset = FVector(CorridorsWidthX, OffsetY, 0.f);
+
+	PatrolSpawnIndex = FMath::RandRange(0, NbFloorTilesY - PatrolSpawnSize);
 }
 
 void AProceduralRoom::BuildEmptyRoom()
 {
-	FVector BuildOffset = FVector(-NodeWidth, -NodeWidth, 0.f) + Offset;
+	FVector FloorMeshOffset(FloorWidth / 2.f, FloorWidth / 2.f, -FloorHeight);
+	FVector CorridorsOffset(CorridorsWidthX, CorridorsWidthY, 0.f);
+	FVector BuildOffset = RoomOffset + FloorMeshOffset - CorridorsOffset;
 
 	for (int32 i = 0; i < NbFloorTilesX; i++)
 	{
 		for (int32 j = 0; j < NbFloorTilesY; j++)
 		{
-			FVector Location = BuildOffset + FVector(i * FloorWidth + FloorRadius, j * FloorWidth + FloorRadius, -FloorHeight);
+			FVector Location = BuildOffset + FVector(i * FloorWidth, j * FloorWidth, 0.f);
 			FloorHISMC->AddInstance(FTransform(Location));
 
 			if (i == 0) 
 			{
-				if (j != SafeZoneIndex && j != SafeZoneIndex + 1) 
+				if (j < SafeZoneIndex || j >= SafeZoneIndex + SafeZoneAccessSize)
 				{
 					BuildWallOnFloor(Location, EWallOrientation::EWO_Left);
 				}
 			}
 			else if (i == NbFloorTilesX - 1) 
 			{
-				BuildWallOnFloor(Location, EWallOrientation::EWO_Right);
+				if (j < PatrolSpawnIndex || j >= PatrolSpawnIndex + PatrolSpawnSize)
+				{
+					BuildWallOnFloor(Location, EWallOrientation::EWO_Right);
+				}
 			}
 
 			if (j == 0)
@@ -112,6 +124,8 @@ void AProceduralRoom::BuildEmptyRoom()
 			}
 		}
 	}
+
+	BuildPatrolSpawn(BuildOffset);
 }
 
 void AProceduralRoom::BuildWallOnFloor(const FVector& FloorLocation, EWallOrientation Orientation)
@@ -146,6 +160,72 @@ void AProceduralRoom::BuildWallOnFloor(const FVector& FloorLocation, EWallOrient
 	WallsHISMC->AddInstance(FTransform(WallRotation, UpperWallLocation));
 }
 
+void AProceduralRoom::BuildPatrolSpawn(const FVector& BuildOffset)
+{
+	FRotator Rotation(0.f, 90.f, 0.f);
+	FVector Location = BuildOffset;
+
+	Location.X += (NbFloorTilesX - 1) * FloorWidth + WallHorizontalOffset;
+	Location.Y += (PatrolSpawnIndex + (PatrolSpawnSize - 1) / 2.f) * FloorWidth;
+	Location.Z += FloorHeight;
+
+	GetWorld()->SpawnActor<APatrolSpawnerDoor>(PatrolSpawnerClass, Location, Rotation);
+}
+
+void AProceduralRoom::FillProceduralRoom()
+{
+	TSharedPtr<Floor> TheFloor(new Floor(GridSizeX, GridSizeY, 1, 1, SplitFactor));
+
+	TheFloor->Partition();
+
+	TArray<TSharedPtr<FloorNode>> Partition = TheFloor->GetPartitionedFloor();
+
+	if (bDrawDebugGrid)
+	{
+		TheFloor->DrawFloorNodes(GetWorld(), RoomOffset, UnitNodeWidth, DebugGridHeight, 4.f);
+	}
+
+	SpawnStandsInPartition(Partition);
+
+	SpawnObstaclesInPartition(Partition);
+}
+
+void AProceduralRoom::SpawnStandsInPartition(TArray<TSharedPtr<FloorNode>>& Partition)
+{
+	for (int32 i = 0; i < NumberOfStands; i++)
+	{
+		int32 RandomIndex = FMath::RandRange(0, Partition.Num() - 1);
+
+		FCornerCoordinates Coordinates = Partition[RandomIndex]->GetCornerCoordinates();
+
+		SpawnObstacleInNode(Coordinates, true, false);
+
+		Partition.RemoveAt(RandomIndex);
+	}
+}
+
+void AProceduralRoom::SpawnObstacleInNode(const FCornerCoordinates& Coordinates, bool bHasStandOnIt = false, bool bHasObstacleOnIt = false)
+{
+	FVector CollisionAvoidanceMargin(ObstacleWidth / 2.f, ObstacleWidth / 2.f, 0.f);
+	FVector UpperLeft = FVector(Coordinates.UpperLeftX * UnitNodeWidth, Coordinates.UpperLeftY * UnitNodeWidth, 0.f) + CollisionAvoidanceMargin;
+	FVector LowerRight = FVector(Coordinates.LowerRightX * UnitNodeWidth, Coordinates.LowerRightY * UnitNodeWidth, 0.f) - CollisionAvoidanceMargin;
+	FVector RandomPointInSquare = GetRandomPointInSquare(UpperLeft, LowerRight);
+	
+	FVector Location = RandomPointInSquare + RoomOffset;
+	AddObstacleInstanceAtLocation(Location);
+
+	if (bHasStandOnIt) 
+	{
+		FVector UpperLocation = Location + FVector(0.f, 0.f, ObstacleHeight);
+		GetWorld()->SpawnActor<AStandItem>(StandClass, UpperLocation, FRotator::ZeroRotator);
+	}
+	else if (bHasObstacleOnIt) 
+	{
+		FVector UpperLocation = Location + FVector(0.f, 0.f, ObstacleHeight);
+		AddObstacleInstanceAtLocation(UpperLocation);
+	}
+}
+
 FVector AProceduralRoom::GetRandomPointInSquare(const FVector& UpperLeft, const FVector& LowerRight)
 {
 	float RandomX = FMath::FRandRange(UpperLeft.X, LowerRight.X);
@@ -154,29 +234,15 @@ FVector AProceduralRoom::GetRandomPointInSquare(const FVector& UpperLeft, const 
 	return FVector(RandomX, RandomY, 0.f);
 }
 
-void AProceduralRoom::SpawnItemInNode(const FCornerCoordinates& Coordinates)
+void AProceduralRoom::AddObstacleInstanceAtLocation(const FVector& Location) 
 {
-	FVector UpperLeft(Coordinates.UpperLeftX * NodeWidth + ObstacleRadius, Coordinates.UpperLeftY * NodeWidth + ObstacleRadius, 0.f);
-	FVector LowerRight(Coordinates.LowerRightX * NodeWidth - ObstacleRadius, Coordinates.LowerRightY * NodeWidth - ObstacleRadius, 0.f);
-	FVector RandomPointInSquare = GetRandomPointInSquare(UpperLeft, LowerRight);
-	FVector Location = RandomPointInSquare + Offset;
-
 	float RandomYaw = 90.f * FMath::RandRange(0, 3);
 	FRotator Rotation(0.f, RandomYaw, 0.f);
-
 	ObstaclesHISMC->AddInstance(FTransform(Rotation, Location));
-
-	FVector UpperObstacleLocation = Location + FVector(0.f, 0.f, ObstacleWidth);
-	float UpperObstacleRandomYaw = 90.f * FMath::RandRange(0, 3);
-	FRotator UpperObstacleRotation(0.f, UpperObstacleRandomYaw, 0.f);
-
-	ObstaclesHISMC->AddInstance(FTransform(UpperObstacleRotation, UpperObstacleLocation));
 }
 
-void AProceduralRoom::SpawnItemsInGrid(TSharedPtr<Floor> FloorGrid)
+void AProceduralRoom::SpawnObstaclesInPartition(const TArray<TSharedPtr<FloorNode>>& Partition)
 {
-	TArray<TSharedPtr<FloorNode>> Partition = FloorGrid->GetPartitionedFloor();
-
 	for (int32 i = 0; i < Partition.Num(); i++)
 	{
 		FCornerCoordinates Coordinates = Partition[i]->GetCornerCoordinates();
@@ -185,7 +251,7 @@ void AProceduralRoom::SpawnItemsInGrid(TSharedPtr<Floor> FloorGrid)
 
 		if (DiceRoll < ObstaclesDensity)
 		{
-			SpawnItemInNode(Coordinates);
+			SpawnObstacleInNode(Coordinates, false, true);
 		}
 	}
 }

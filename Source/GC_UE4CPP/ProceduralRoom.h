@@ -34,82 +34,88 @@ protected:
 
 private:
 
+	void SetupConstrainedParameters();
+
 	void BuildEmptyRoom();
 
 	void BuildWallOnFloor(const FVector& FloorLocation, EWallOrientation Orientation);
 
+	void BuildPatrolSpawn(const FVector& BuildOffset);
+
+	void FillProceduralRoom();
+
+	void SpawnStandsInPartition(TArray<TSharedPtr<FloorNode>>& Partition);
+
+	void SpawnObstacleInNode(const FCornerCoordinates& Coordinates, bool bHasStandOnIt, bool bHasObstacleOnIt);
+
 	FVector GetRandomPointInSquare(const FVector& UpperLeft, const FVector& LowerRight);
 
-	void SpawnItemInNode(const FCornerCoordinates& Coordinates);
+	void AddObstacleInstanceAtLocation(const FVector& Location);
 
-	void SpawnItemsInGrid(TSharedPtr<Floor> FloorGrid);
+	void SpawnObstaclesInPartition(const TArray<TSharedPtr<FloorNode>>& Partition);
+
 	
 	UPROPERTY(VisibleAnywhere)
 		UInstancedStaticMeshComponent* FloorHISMC;
-	
 	UPROPERTY(VisibleAnywhere)
 		UInstancedStaticMeshComponent* ObstaclesHISMC;
-	
 	UPROPERTY(VisibleAnywhere)
 		UInstancedStaticMeshComponent* WallsHISMC;
-	
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AActor> StandClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float FloorWidth;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float FloorHeight;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float ObstacleWidth;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float ObstaclesDensity;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float NodeWidth;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		float RoomTargetLength;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		float RoomTargetWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		float CorridorsTargetWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		float UnitNodeWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
 		float SplitFactor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float RoomLength;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float RoomWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		float ObstaclesDensity;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		int32 NumberOfStands;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> StandClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> PatrolSpawnerClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		int32 SafeZoneAccessSize;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		int32 PatrolSpawnSize;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		bool bDrawDebugGrid;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		float DebugGridHeight;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float NumberOfStands;
 
-	float FloorRadius;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Floor Mesh", meta = (AllowPrivateAccess = "true"))
+		float FloorWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Floor Mesh", meta = (AllowPrivateAccess = "true"))
+		float FloorHeight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Obstacle Mesh", meta = (AllowPrivateAccess = "true"))
+		float ObstacleWidth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Obstacle Mesh", meta = (AllowPrivateAccess = "true"))
+		float ObstacleHeight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Wall Mesh", meta = (AllowPrivateAccess = "true"))
+		float WallHeight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Wall Mesh", meta = (AllowPrivateAccess = "true"))
+		float WallHorizontalOffset;
+
 
 	int32 NbFloorTilesX;
 	int32 NbFloorTilesY;
 
+	int32 SafeZoneIndex;
+	int32 PatrolSpawnIndex;
 
-	float ObstacleRadius;
+	float CorridorsWidthX;
+	float CorridorsWidthY;
+
+	FVector RoomOffset;
 
 	int32 GridSizeX;
 	int32 GridSizeY;
-
-	// Draw helpers grid height
-	float GridHeight;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float OffsetY;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float WallHeight;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Room, meta = (AllowPrivateAccess = "true"))
-		float WallHorizontalOffset;
-
-	int32 SafeZoneIndex;
-
-	FVector Offset;
-
 };
