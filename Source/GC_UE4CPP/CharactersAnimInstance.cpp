@@ -54,27 +54,52 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 // Here, variables are uptaded 
 void UCharactersAnimInstance::UpdateAnimProperties()
 {
-	// Test Speed
-	SpeedRef = PlayerReference->GetVelocity().Size();
-	if (SpeedRefAI)
+
+	//Test de la reference joueur 
+	if (PlayerReference)
 	{
+
+		//Test de vitesse 
+		SpeedRef = PlayerReference->GetVelocity().Size();
+
+		if (PlayerReference->bCarry)
+		{
+			bCarryRef = true;
+		}
+
+		else
+		{
+			bCarryRef = false;
+		}
+
+		if (PlayerReference->bDead)
+		{
+			bFinishRef = true;
+			bVictoryRef = true;
+		}
+	}
+
+	//Test de la reference de l'IA 
+	if (AIReference)
+	{
+		//Test de vitesse 
 		SpeedRefAI = AIReference->GetVelocity().Size();
+
+		if (AIReference->bCarry)
+		{
+			bCarryRefAI = true;
+		}
+		
+		else
+		{
+			bCarryRefAI = false;
+		}
+
+		if (AIReference->bDead)
+		{
+			bFinishRefAI = true;
+			bVictoryRefAI = true;
+		}
 	}
 
-	// Test Carry a revoir 
-	if (PlayerReference->bCarry)
-	{
-		bCarryRef = true;
-	}
-	else
-	{
-		bCarryRef = false;
-	}
-
-	// Test End
-	if (PlayerReference->bDead)
-	{
-		bFinishRef = true;
-		bVictoryRef = true;
-	}
 }

@@ -63,9 +63,11 @@ void ABaseCharacter::Interact()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("E pressed"));
 		bCarry = true;
+		
 
 		if (InteractableObject) 
 		{
+			bCarry = true;
 			InteractableObject->Interact(this);
 		}
 		else if (PossessedObject)
@@ -73,6 +75,11 @@ void ABaseCharacter::Interact()
 			bCarry = false;
 			PossessedObject->Interact(this);
 		}
+		else if (!InteractableObject && !PossessedObject)
+		{
+			bCarry = false;
+		}
+		
 	}
 }
 
