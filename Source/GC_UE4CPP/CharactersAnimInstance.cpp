@@ -3,6 +3,7 @@
 
 #include "CharactersAnimInstance.h"
 #include "BaseCharacter.h"
+#include "AIPatrol.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 // Animations of the characters
@@ -12,30 +13,34 @@ UCharactersAnimInstance::UCharactersAnimInstance()
 	bVictoryRef = false;
 	bFinishRef = false;
 	bCarryRef = false;
+
 }
 
 void UCharactersAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
+
 	// Reference to the BaseCharacter
-	PlayerReference = Cast<ABaseCharacter>(TryGetPawnOwner());
+	ActorReference = Cast<ABaseCharacter>(TryGetPawnOwner());
 }
 
 void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	// Call the Update animations function of the player
+	// Call the Update animations function of the player/AI
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	if (PlayerReference)
+
+	if (ActorReference) 
 	{
 		UpdateAnimProperties();
 	}
+	
 	// Get the owning Actors
 	else
 	{
 		AActor* Character = GetOwningActor();
-		PlayerReference = Cast<ABaseCharacter>(Character);
-
-		if (PlayerReference)
+		ActorReference = Cast<ABaseCharacter>(Character);
+		
+		if (ActorReference )
 		{
 			UpdateAnimProperties();
 		}
@@ -45,23 +50,28 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 // Here, variables are uptaded 
 void UCharactersAnimInstance::UpdateAnimProperties()
 {
-	// Test Speed
-	SpeedRef = PlayerReference->GetVelocity().Size();
 
-	// Test Carry
-	if (PlayerReference)
+	//Test actor reference
+	if (ActorReference)
 	{
-		bCarryRef = true;
-	}
-	else
-	{
-		bCarryRef = false;
-	}
 
-	// Test End
-	if (PlayerReference->bDead)
-	{
-		bFinishRef = true;
-		bVictoryRef = true;
+		//Test Speed  
+		SpeedRef = ActorReference->GetVelocity().Size();
+
+		if (ActorReference->bCarry)
+		{
+			bCarryRef = true;
+		}
+
+		else
+		{
+			bCarryRef = false;
+		}
+
+		if (ActorReference->bDead)
+		{
+			bFinishRef = true;
+			bVictoryRef = true;
+		}
 	}
 }

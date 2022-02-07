@@ -20,6 +20,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		bool bDead;
+
+	UPROPERTY(VisibleAnywhere)
+		bool bCarry;
 	
 	UPROPERTY(EditAnywhere)
 		FName SocketName;
