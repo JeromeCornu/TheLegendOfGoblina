@@ -29,6 +29,7 @@ AAIPatrol::AAIPatrol()
 	// Connect the overlapping function to the sphere component 
 	MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAIPatrol::OnPlayerCatch);
 	
+	Spawner = nullptr;
 
 	AAIPatrolController* AIController = Cast<AAIPatrolController>(this->GetController());
 	if (AIController)

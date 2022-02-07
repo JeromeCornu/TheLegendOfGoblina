@@ -4,6 +4,7 @@
 #include "SpawnVolume.h"
 #include "AIPatrol.h"
 #include "AIPatrolController.h"
+#include "PickableItem.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -16,8 +17,8 @@ ASpawnVolume::ASpawnVolume()
 	SpawnVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	RootComponent = SpawnVolume;
 
-	NumberToSpawn = 1;
-	NumberSpawned = 0;
+	ActorToSpawn = 1;
+	ActorSpawned = 0;
 }
 
 // Called when the game starts or when spawned
@@ -26,7 +27,7 @@ void ASpawnVolume::BeginPlay()
 	Super::BeginPlay();
 	
 	// Setup our timer between each spawn of AI
-	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnAI, 2.0f, true);
+	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 2.0f, true);
 	// -> just do this again when you want to reajust the timer (I think)
 }
 
@@ -36,19 +37,20 @@ void ASpawnVolume::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Limits the number of AI which will spawn 
-	if (NumberSpawned == NumberToSpawn)
+	if (ActorSpawned == ActorToSpawn)
 	{
 		GetWorld()->GetTimerManager().ClearTimer(SpawnTimer);
 	}
 }
 
 // Spawn the ennemies
-void ASpawnVolume::SpawnAI()
+void ASpawnVolume::SpawnActors()
 {
 	UWorld* world = GetWorld();
 
 	// To get a random spaw Location
-	FVector SpawnLocation = GetRandomLocation();
+	FVector SpawnAILocation = GetRandomLocation();
+	FVector SpawnMeatLocation = SpawnAILocation + (0.f, 0.f, 10.f);
 
 	// To get the rotation of the spawning AI
 	FRotator SpawnRotation;
@@ -56,11 +58,16 @@ void ASpawnVolume::SpawnAI()
 	SpawnRotation.Pitch = 0.f;	// Y rotation
 	SpawnRotation.Roll = 0.f;	// Z rotation
 
-	if (world && AIClassReference)
+	if (world && AIClassReference && MeatClassReference)
 	{
-		AAIPatrol* const Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, SpawnRotation);
-		NumberSpawned++;
+		FActorSpawnParameters SpawnParams;
+		APickableItem* const Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
+		AAIPatrol* const Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnAILocation, SpawnRotation, SpawnParams);
+		
+		ActorSpawned++;
 		Bot->Spawner = this;
+
+
 	}
 }
 

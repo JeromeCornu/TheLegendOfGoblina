@@ -22,6 +22,12 @@ class GC_UE4CPP_API AAIPatrolController : public AAIController
 		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the player location
 			FName PlayerKey;
 
+		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the goal location
+			FName ExitPointKey;
+
+		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the goal location
+			FName PossessMeatKey;
+
 		TArray<AActor*> PatrolPoints;
 
 		void OnPossess(APawn* InPawn); // function called when possess a pawn

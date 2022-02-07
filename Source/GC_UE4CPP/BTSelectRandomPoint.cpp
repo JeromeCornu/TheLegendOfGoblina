@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTSelectRandomPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 	{
 		// Get BB component
 			// Point where the AI is
-		AAIPatrolTargetPoint* CurrentPoint = Cast<AAIPatrolTargetPoint>(AICon->GetBlackboardComp()->GetValueAsObject("RandomPoint"));
+		// AAIPatrolTargetPoint* CurrentPoint = Cast<AAIPatrolTargetPoint>(AICon->GetBlackboardComp()->GetValueAsObject("RandomPoint"));
 			// Other points
 		TArray<AActor*> AllPoints = AICon->GetPatrolPoints();
 			// Next point

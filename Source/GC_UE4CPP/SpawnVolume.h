@@ -26,11 +26,15 @@ public:
 
 private:
 
-	// A class reference for AIPatrol class
+	// A class reference for AIPatrol
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
 		TSubclassOf<class AAIPatrol> AIClassReference;
 
-	// A BoxComponent which act as spawn volume to spawn the AI
+	// A class reference for PickableItem
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
+		TSubclassOf<class APickableItem> MeatClassReference;
+
+	// A BoxComponent which act as spawn volume to spawn
 	UPROPERTY(EditAnywhere, Category = "Components")
 		UBoxComponent* SpawnVolume;
 
@@ -39,15 +43,14 @@ private:
 
 	// Number of units to spawn
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
-		int32 NumberToSpawn;
-
+		int32 ActorToSpawn;
 	// Number of units already spawned
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
-		int32 NumberSpawned;
+		int32 ActorSpawned;
 
-	// Used to spawn AI
+	// Used to spawn Actors
 	UFUNCTION()
-		void SpawnAI();
+		void SpawnActors();
 
 	// Used to returns a FVector which has random location coordinates
 	UFUNCTION()
