@@ -17,11 +17,11 @@ EBTNodeResult::Type UBTSaveSelectPatrolPoint::ExecuteTask(UBehaviorTreeComponent
 		// Get BB component
 			// Variable of the BB
 		UBlackboardComponent* BlackboardComp = AICon->GetBlackboardComp();
-		// Point where the AI is
+			// Point where the AI is
 		AAIPatrolTargetPoint* CurrentPoint = Cast<AAIPatrolTargetPoint>(BlackboardComp->GetValueAsObject("LocationToGo"));
-		// Other points
+			// Other points
 		TArray<AActor*> AvailablePatrolPoints = AICon->GetPatrolPoints();
-		// Next point
+			// Next point
 		AAIPatrolTargetPoint* NextPatrolPoint = nullptr;
 
 

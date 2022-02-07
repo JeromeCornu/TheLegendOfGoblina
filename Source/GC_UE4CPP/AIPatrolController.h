@@ -40,7 +40,4 @@ public:
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const { return Blackboard; }
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const { return PatrolPoints; }
 	// FORCEINLINE --> forces compiler to do inline unconditionally
-
-	UFUNCTION()
-		TArray<AActor*> GetAllPoints();
 };

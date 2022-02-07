@@ -18,9 +18,9 @@ EBTNodeResult::Type UBTSelectRandomPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 			// Point where the AI is
 		AAIPatrolTargetPoint* CurrentPoint = Cast<AAIPatrolTargetPoint>(AICon->GetBlackboardComp()->GetValueAsObject("RandomPoint"));
 			// Other points
-		TArray<AActor*> AllPoints = AICon->GetAllPoints();
+		TArray<AActor*> AllPoints = AICon->GetPatrolPoints();
 			// Next point
-		AAIPatrolTargetPoint* NextPatrolPoint = nullptr;
+		AAIPatrolTargetPoint* NextPatrolPoint;
 
 
 		// Size of the array
@@ -34,7 +34,7 @@ EBTNodeResult::Type UBTSelectRandomPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 
 		AICon->GetBlackboardComp()->SetValueAsObject("RandomPoint", NextPatrolPoint); // link the BB's value with the variable NextPatrolPoint
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("HERE"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Go to random point"));
 
 		return EBTNodeResult::Succeeded;
 	}

@@ -60,6 +60,7 @@ void ASpawnVolume::SpawnAI()
 	{
 		AAIPatrol* const Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, SpawnRotation);
 		NumberSpawned++;
+		Bot->Spawner = this;
 	}
 }
 

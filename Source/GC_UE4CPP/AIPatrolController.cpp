@@ -5,6 +5,7 @@
 #include "AIPatrol.h"
 #include "AIPatrolTargetPoint.h"
 #include "BTPickUpMeat.h"
+#include "SpawnVolume.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -35,7 +36,20 @@ void AAIPatrolController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	// Get reference to the character
-	AAIPatrol* AICharacter = (AAIPatrol*)InPawn;
+	// AAIPatrol* AICharacter = (AAIPatrol*)InPawn;
+	AAIPatrol* AICharacter = Cast<AAIPatrol>(InPawn);
+	ASpawnVolume* ExitPoint = AICharacter->Spawner;
+
+	if (AICharacter)
+	{
+		// Set the variable ExitPoint of the BT as the spawner
+		Blackboard->SetValueAsObject("ExitPoint", ExitPoint);     // ICI CA CRASH
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("First point registered"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("HELP ca a crash"));
+	}
 
 	// Cast succesful ?
 	if (AICharacter) 
@@ -47,31 +61,9 @@ void AAIPatrolController::OnPossess(APawn* InPawn)
 		Blackboard->SetValueAsBool("PossessMeat", bValue);
 
 
-
 		// Populate patrol point array (make an array with all point that are in the game)
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolTargetPoint::StaticClass(), PatrolPoints);
 
-
-
-		GetAllPoints();
-
-
-
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("PossessMeat"));
 	}
-}
-
-TArray<AActor*> AAIPatrolController::GetAllPoints()
-{
-	// Get all points available
-	TArray<AActor*> AvailablePatrolPoints = GetPatrolPoints();
-
-	// Get first point of the array : AAIPatrolTargetPoint, remove it and set it as the ExitPoint
-	AAIPatrolTargetPoint* ExitPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[0]);
-	// Remove first point from the array
-	AvailablePatrolPoints.Remove(ExitPoint);
-	// Set the variable FirstPoint of the BT
-	Blackboard->SetValueAsObject("ExitPoint", ExitPoint);
-
-	return AvailablePatrolPoints;
 }
