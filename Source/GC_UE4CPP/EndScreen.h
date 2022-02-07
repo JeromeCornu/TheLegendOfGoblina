@@ -4,41 +4,45 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "GC_UE4CPPGameModeBase.h"
-#include "MyUserWidget.generated.h"
+#include "Components/TextBlock.h"
+#include "EndScreen.generated.h"
+
 
 /**
  * 
  */
 UCLASS()
-class GC_UE4CPP_API UMyUserWidget : public UUserWidget
+class GC_UE4CPP_API UEndScreen : public UUserWidget
 {
-
 	GENERATED_BODY()
-	
-	
+
+	class AGC_UE4CPPGameModeBase* GameMode;
+	FName VictoryDefeatTextBlockName;
+
 protected:
-	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UTextBlock* VictoryDefeatText;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* StartButton;
-	
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* OptionsButton;
+		class UButton* RestartButton;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* QuitButton;
+		class UButton* BackToMenuButton;
 
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
-		void OnStartButtonClicked();
+		void OnRestartButtonClicked();
 
 	UFUNCTION()
-		void OnOptionsButtonClicked();
+		void OnBackToMenuButtonClicked();
+public:	
+	
 
 	UFUNCTION()
-		void OnQuitButtonClicked();
+		void Lose();
 
-	    
+	UFUNCTION()
+		void Win();
+	
 };

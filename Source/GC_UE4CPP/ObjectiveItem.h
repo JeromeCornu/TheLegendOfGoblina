@@ -14,6 +14,7 @@ UCLASS()
 class GC_UE4CPP_API AObjectiveItem : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
+		class AGC_UE4CPPGameModeBase* GameMode;
 	
 public:	
 	// Sets default values for this actor's properties

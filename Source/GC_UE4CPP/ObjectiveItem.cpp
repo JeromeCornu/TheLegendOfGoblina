@@ -2,6 +2,7 @@
 #include "BaseCharacter.h"
 #include "PickableItem.h"
 #include "ObjectiveItem.h"
+#include "GC_UE4CPPGameModeBase.h"
 
 // Sets default values
 AObjectiveItem::AObjectiveItem()
@@ -18,12 +19,15 @@ AObjectiveItem::AObjectiveItem()
 	DestroyDelay = 2;
 
 	Item = nullptr;
+
+	
 }
 
 // Called when the game starts or when spawned
 void AObjectiveItem::BeginPlay()
 {
 	Super::BeginPlay();
+	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 	
 }
 
@@ -44,6 +48,8 @@ void AObjectiveItem::Interact(ABaseCharacter* character)
 		{
 			Item->LayItemOnStand(StaticMesh, SocketName);
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item collected, destroying in few seconds");
+			character->bCarry = !character->bCarry;
+			
 			GetWorld()->GetTimerManager().SetTimer(TriggerDestroyTimerHandle, this, &AObjectiveItem::TriggerDestroy, DestroyDelay);
 		}
 	}
@@ -51,6 +57,8 @@ void AObjectiveItem::Interact(ABaseCharacter* character)
 
 void AObjectiveItem::TriggerDestroy()
 {
+	
+	GameMode->GetaSteak();
 	Item->Destroy();
 	Item = nullptr;
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item destroyed");

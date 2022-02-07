@@ -12,9 +12,12 @@ public class GC_UE4CPP : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
+		//adding color paramater
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
+
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
