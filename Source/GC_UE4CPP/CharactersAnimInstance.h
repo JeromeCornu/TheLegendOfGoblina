@@ -23,38 +23,22 @@ protected:
 
 	// References to our characters
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		class ABaseCharacter* PlayerReference;
+		class ABaseCharacter* ActorReference;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		class AAIPatrol* AIReference;
 
-//Animation variable targeting the Character
+//Animation variable targeting all characters
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		float SpeedRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bVictoryRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bFinishRef;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bCarryRef;
-
-////Animation variable targeting the AI
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		float SpeedRefAI;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		bool bVictoryRefAI;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		bool bFinishRefAI;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
-		bool bCarryRefAI;
 
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")

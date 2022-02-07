@@ -38,6 +38,7 @@ public:
 
 	ASpawnVolume* Spawner;
 
+
 private:
 
 	// Called when the player has been see

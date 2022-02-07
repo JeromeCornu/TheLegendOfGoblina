@@ -14,24 +14,21 @@ UCharactersAnimInstance::UCharactersAnimInstance()
 	bFinishRef = false;
 	bCarryRef = false;
 
-	bVictoryRefAI = false;
-	bFinishRefAI = false;
-	bCarryRefAI = false;
 }
 
 void UCharactersAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
+
 	// Reference to the BaseCharacter
-	PlayerReference = Cast<ABaseCharacter>(TryGetPawnOwner());
-	AIReference = Cast<AAIPatrol>(TryGetPawnOwner());
+	ActorReference = Cast<ABaseCharacter>(TryGetPawnOwner());
 }
 
 void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	// Call the Update animations function of the player/AI
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	if (PlayerReference || AIReference)
+	if (ActorReference) 
 	{
 		UpdateAnimProperties();
 	}
@@ -40,11 +37,9 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	else
 	{
 		AActor* Character = GetOwningActor();
-		AActor* CharacterAI = TryGetPawnOwner();
-		PlayerReference = Cast<ABaseCharacter>(Character);
-		AIReference = Cast<AAIPatrol>(CharacterAI);
-
-		if (PlayerReference || AIReference)
+		ActorReference = Cast<ABaseCharacter>(Character);
+		
+		if (ActorReference )
 		{
 			UpdateAnimProperties();
 		}
@@ -56,13 +51,13 @@ void UCharactersAnimInstance::UpdateAnimProperties()
 {
 
 	//Test de la reference joueur 
-	if (PlayerReference)
+	if (ActorReference)
 	{
 
 		//Test de vitesse 
-		SpeedRef = PlayerReference->GetVelocity().Size();
+		SpeedRef = ActorReference->GetVelocity().Size();
 
-		if (PlayerReference->bCarry)
+		if (ActorReference->bCarry)
 		{
 			bCarryRef = true;
 		}
@@ -72,34 +67,10 @@ void UCharactersAnimInstance::UpdateAnimProperties()
 			bCarryRef = false;
 		}
 
-		if (PlayerReference->bDead)
+		if (ActorReference->bDead)
 		{
 			bFinishRef = true;
 			bVictoryRef = true;
 		}
 	}
-
-	//Test de la reference de l'IA 
-	if (AIReference)
-	{
-		//Test de vitesse 
-		SpeedRefAI = AIReference->GetVelocity().Size();
-
-		if (AIReference->bCarry)
-		{
-			bCarryRefAI = true;
-		}
-		
-		else
-		{
-			bCarryRefAI = false;
-		}
-
-		if (AIReference->bDead)
-		{
-			bFinishRefAI = true;
-			bVictoryRefAI = true;
-		}
-	}
-
 }
