@@ -15,38 +15,30 @@ EBTNodeResult::Type UBTSelectRandomPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 	if (AICon)
 	{
 		// Get BB component
-			// Variable of the BB
-		UBlackboardComponent* BlackboardComp = AICon->GetBlackboardComp();
-		// Point where the AI is
-		AAIPatrolTargetPoint* CurrentPoint = Cast<AAIPatrolTargetPoint>(BlackboardComp->GetValueAsObject("RandomPoint"));
-		// Other points
-		TArray<AActor*> AvailablePatrolPoints = AICon->GetPatrolPoints();
-		// Next point
+			// Point where the AI is
+		AAIPatrolTargetPoint* CurrentPoint = Cast<AAIPatrolTargetPoint>(AICon->GetBlackboardComp()->GetValueAsObject("RandomPoint"));
+			// Other points
+		TArray<AActor*> AllPoints = AICon->GetAllPoints();
+			// Next point
 		AAIPatrolTargetPoint* NextPatrolPoint = nullptr;
 
 
-		// Get first point of the array of AAIPatrolTargetPoint
-		AAIPatrolTargetPoint* FirstPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[0]);
-		// Remove first point from the array
-		AvailablePatrolPoints.Remove(FirstPoint);
-		// Set the variable FirstPoint of the BT
-		BlackboardComp->SetValueAsObject("FirstPoint", FirstPoint);
-
-
 		// Size of the array
-		int32 ArrayLenght = AvailablePatrolPoints.Num();
+		int32 ArrayLenght = AllPoints.Num();
 
 
 		// if the place is occuiped by an aliment
 		AICon->CurrentPatrolPoint = rand() % ArrayLenght - 1;
-		NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AvailablePatrolPoints[++AICon->CurrentPatrolPoint]); // -> go to the next random point
+		NextPatrolPoint = Cast<AAIPatrolTargetPoint>(AllPoints[++AICon->CurrentPatrolPoint]); // -> go to the next random point
 
 
-		BlackboardComp->SetValueAsObject("RandomPoint", NextPatrolPoint); // link the BB's value with the variable NextPatrolPoint
+		AICon->GetBlackboardComp()->SetValueAsObject("RandomPoint", NextPatrolPoint); // link the BB's value with the variable NextPatrolPoint
 
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("HERE"));
 
 		return EBTNodeResult::Succeeded;
 	}
 
 	return EBTNodeResult::Failed;
 }
+

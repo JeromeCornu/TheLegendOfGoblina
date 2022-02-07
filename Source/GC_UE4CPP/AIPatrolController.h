@@ -15,12 +15,6 @@ class GC_UE4CPP_API AAIPatrolController : public AAIController
 {
 	GENERATED_BODY()
 
-		//Behavior tree component
-		UBehaviorTreeComponent* BehaviorComp;
-
-		// Our blackboard component
-		UBlackboardComponent* BlackboardComp;
-
 		// Blackboard keys
 		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the goal location
 			FName LocationToGoKey;
@@ -43,10 +37,10 @@ public:
 
 	// Inline getter Functions
 
-	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const { return BlackboardComp; }
+	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const { return Blackboard; }
 	FORCEINLINE TArray<AActor*> GetPatrolPoints() const { return PatrolPoints; }
 	// FORCEINLINE --> forces compiler to do inline unconditionally
 
 	UFUNCTION()
-		virtual void BeginPlay();
+		TArray<AActor*> GetAllPoints();
 };
