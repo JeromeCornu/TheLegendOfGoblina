@@ -7,6 +7,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "DrawDebugHelpers.h"
 #include "PlayableCharacter.h"
+#include "PickableItem.h"
 #include "Components/SphereComponent.h"
 
 
@@ -16,7 +17,6 @@ AAIPatrol::AAIPatrol()
 	// Initialize Senses
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->SetPeripheralVisionAngle(67.5f); // 90.f = angle de 180°	donc	67.5f = angle de 135°
-
 
 	// Collision Sphere's setup
 	SphereRadius = 150.0f;
