@@ -28,16 +28,16 @@ protected:
 
 //Animation variable targeting all characters
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		float SpeedRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bVictoryRef;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bFinishRef;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bCarryRef;
 
 

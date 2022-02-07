@@ -13,6 +13,7 @@ UCLASS()
 class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+	class APlayerCharacterController* PlayerController;
 	class UInGameUserWidgetclass* InGameHUD;
 		
 public:
@@ -22,12 +23,12 @@ public:
 
 	// return the number of steaks in the game
 	UFUNCTION(BlueprintPure, Category = "Steaks")
-		virtual int32 GetSteaks() const;
+		virtual float GetSteaks() const;
 
 
 	//setter the number of steaks
 	UFUNCTION(BlueprintCallable, Category = "Steaks")
-		virtual void SetSteaks(int32 newSteaks);
+		virtual void SetSteaks(float newSteaks);
 
 	UFUNCTION()
 		void Lose();
@@ -51,6 +52,9 @@ public:
 
 private:
 	bool GameIsPaused = false;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 	
 

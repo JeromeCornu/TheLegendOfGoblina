@@ -3,10 +3,7 @@
 
 #include "InGameUserWidgetclass.h"
 
-void UInGameUserWidgetclass::SetPercentage(int32 Percent)
-{
-	SteaksBar->SetPercent(Percent);
-}
+
 
 void UInGameUserWidgetclass::NativeConstruct()
 {
@@ -15,5 +12,14 @@ void UInGameUserWidgetclass::NativeConstruct()
 		GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 		GameMode->SetSteaks(0);
 		SteaksBar->SetPercent(GameMode->GetSteaks());
+		
+	}
+}
+
+void UInGameUserWidgetclass::SetPercentage(float Percent)
+{
+	if (SteaksBar !=NULL)
+	{
+	SteaksBar->SetPercent(Percent);
 	}
 }

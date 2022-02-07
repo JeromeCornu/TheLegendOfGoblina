@@ -20,12 +20,14 @@ public:
 	class AGC_UE4CPPGameModeBase* GameMode;
 
 	UFUNCTION()
-		void SetPercentage(int32 Percent);
+		void SetPercentage(float Percent);
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UProgressBar* SteaksBar;
 
 protected:
 
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UProgressBar* SteaksBar;
+	
 };

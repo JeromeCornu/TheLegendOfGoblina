@@ -28,6 +28,7 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	// Call the Update animations function of the player/AI
 	Super::NativeUpdateAnimation(DeltaSeconds);
+
 	if (ActorReference) 
 	{
 		UpdateAnimProperties();
@@ -50,11 +51,11 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UCharactersAnimInstance::UpdateAnimProperties()
 {
 
-	//Test de la reference joueur 
+	//Test actor reference
 	if (ActorReference)
 	{
 
-		//Test de vitesse 
+		//Test Speed  
 		SpeedRef = ActorReference->GetVelocity().Size();
 
 		if (ActorReference->bCarry)

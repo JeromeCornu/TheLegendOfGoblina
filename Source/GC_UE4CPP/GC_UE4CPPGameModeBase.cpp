@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "InGameUserWidgetClass.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerCharacterController.h"
+
 
 
 
@@ -14,18 +16,25 @@
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
 	GameStateClass = AMyGameStateBase::StaticClass();
-	//InGameHUD = Cast<UInGameUserWidgetclass>();
+	
+	
+}
+
+void AGC_UE4CPPGameModeBase::BeginPlay()
+{
+	//InGameHUD = Cast<UInGameUserWidgetclass>(GetWorld()->GetFirstPlayerController()->widget);
+	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
 	
 }
 
 //getter des steaks récuperé par le joueur
-int32 AGC_UE4CPPGameModeBase::GetSteaks() const
+float AGC_UE4CPPGameModeBase::GetSteaks() const
 {
 	return GetGameState<AMyGameStateBase>()->NumberOfSteaks;
 }
 
 //setter des steaks récuperé par le joueur
-void AGC_UE4CPPGameModeBase::SetSteaks(int32 newSteaks)
+void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 {
 	GetGameState<AMyGameStateBase>()->NumberOfSteaks = newSteaks;
 }
@@ -51,9 +60,10 @@ void AGC_UE4CPPGameModeBase::Lose()
 
 void AGC_UE4CPPGameModeBase::Victory()
 {
+	UE_LOG(LogTemp, Warning, TEXT("c'est une victoire"));
 	if (!EndScreenClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
+		UE_LOG(LogTemp, Warning, TEXT("end class was not defined"));
 		return;
 	}
 
@@ -61,11 +71,11 @@ void AGC_UE4CPPGameModeBase::Victory()
 	EndScreen = CreateWidget(GetWorld(), EndScreenClass);
 	if (!EndScreen)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Menu Class was not defined"));
+		UE_LOG(LogTemp, Warning, TEXT("end Class was not defined"));
 		return;
 	}
 
-	EndScreen->AddToViewport();
+	EndScreen->AddToViewport(1);
 	EndScreen->SetVisibility(ESlateVisibility::Visible);
 	
 }
@@ -73,17 +83,22 @@ void AGC_UE4CPPGameModeBase::Victory()
 //when the player take a steak update the UI
 void AGC_UE4CPPGameModeBase::GetaSteak()
 {
-	int32 Temp = GetSteaks();
-	if (Temp == 5)
+	
+	float Temp = GetSteaks();
+	Temp += 0.2;
+	SetSteaks(Temp);
+	
+	InGameHUD = Cast<UInGameUserWidgetclass>(PlayerController->InGameHUD);
+	if (InGameHUD)
+	{
+		InGameHUD->SetPercentage(GetSteaks());
+	}
+	if (Temp == 1)
 	{
 		Victory();
 	}
-	else
-	{
-		Temp += 1;
-		SetSteaks(Temp);
-		InGameHUD->SetPercentage(GetSteaks());
-	}
+		
+	
 	
 }
 
@@ -118,5 +133,7 @@ void AGC_UE4CPPGameModeBase::PauseGame()
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
 	}
 }
+
+
 
 
