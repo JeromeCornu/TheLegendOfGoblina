@@ -20,37 +20,60 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 private:
 
-	// A class reference for AIPatrol class
+	// A class reference for AIPatrol
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
 		TSubclassOf<class AAIPatrol> AIClassReference;
 
-	// A BoxComponent which act as spawn volume to spawn the AI
+	// A class reference for PickableItem
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
+		TSubclassOf<class APickableItem> MeatClassReference;
+
+	// A BoxComponent which act as spawn volume to spawn
 	UPROPERTY(EditAnywhere, Category = "Components")
 		UBoxComponent* SpawnVolume;
+
+
 
 	// Timer used to calcul time between each spawn
 		FTimerHandle SpawnTimer;
 
+	// Minimum SpawnDelay
+	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
+		float SpawnDelayRangeLow;
+
+	// Maximum SpawnDelay
+	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
+		float SpawnDelayRangeHigh;
+
+	// The current SpawnDelay
+		float SpawnDelay;
+
+		bool bCanBeDestroy;
+
+
 	// Number of units to spawn
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
-		int32 NumberToSpawn;
+		int32 ActorToSpawn;
 
 	// Number of units already spawned
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
-		int32 NumberSpawned;
+		int32 AISpawned;
 
-	// Used to spawn AI
+	// Number of units already on map
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
+		int32 AIOnMap;
+
+
+	// Used to spawn Actors
 	UFUNCTION()
-		void SpawnAI();
+		void SpawnActors();
 
 	// Used to returns a FVector which has random location coordinates
 	UFUNCTION()
 		FVector GetRandomLocation();
 
+	UFUNCTION()
+		void OnOverlapDestroy(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
