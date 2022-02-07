@@ -38,20 +38,15 @@ void AStandItem::Tick(float DeltaTime)
 void AStandItem::Interact(ABaseCharacter* character)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Stand Item"));
-	
+
 	if (LaidItem)
 	{
-		
-		
 		if (character->PossessedObject) 
 		{
-			character->bCarry = false;
 			character->PossessedObject->Interact(character);
 		}
 		else 
 		{
-			
-			character->bCarry = true;
 			LaidItem->Owner = character;
 			LaidItem->TakeItemOnStand();
 			LaidItem = nullptr;
@@ -59,7 +54,6 @@ void AStandItem::Interact(ABaseCharacter* character)
 	}
 	else if (character->PossessedObject)
 	{
-		character->bCarry = false;
 		LaidItem = Cast<APickableItem>(character->PossessedObject);
 		if (LaidItem)
 		{

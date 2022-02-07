@@ -65,12 +65,12 @@ void ABaseCharacter::Interact()
 		
 		if (InteractableObject) 
 		{
-			bCarry = true;
+		
 			InteractableObject->Interact(this);
 		}
 		else if (PossessedObject)
 		{
-			bCarry = false;
+			
 			PossessedObject->Interact(this);
 		}
 		

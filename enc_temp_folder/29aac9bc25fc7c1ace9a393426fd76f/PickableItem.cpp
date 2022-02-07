@@ -82,7 +82,6 @@ void APickableItem::Interact(ABaseCharacter* character)
 		{
 			if (character->PossessedObject)
 			{
-				character->bCarry = false;
 				character->PossessedObject->Interact(character);
 			}
 			else

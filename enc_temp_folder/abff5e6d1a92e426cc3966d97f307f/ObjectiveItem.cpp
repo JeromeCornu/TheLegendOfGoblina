@@ -43,13 +43,12 @@ void AObjectiveItem::Interact(ABaseCharacter* character)
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Objective Item");
 	if (!Item && character->PossessedObject)
 	{
-		character->bCarry = false;
 		Item = Cast<APickableItem>(character->PossessedObject);
 		if (Item)
 		{
 			Item->LayItemOnStand(StaticMesh, SocketName);
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item collected, destroying in few seconds");
-			
+			character->bCarry = !character->bCarry;
 			
 			GetWorld()->GetTimerManager().SetTimer(TriggerDestroyTimerHandle, this, &AObjectiveItem::TriggerDestroy, DestroyDelay);
 		}
