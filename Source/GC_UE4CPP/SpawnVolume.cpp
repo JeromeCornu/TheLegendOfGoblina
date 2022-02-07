@@ -50,7 +50,7 @@ void ASpawnVolume::SpawnActors()
 
 	// To get a random spaw Location
 	FVector SpawnAILocation = GetRandomLocation();
-	FVector SpawnMeatLocation = SpawnAILocation + (0.f, 0.f, 10.f);
+	FVector SpawnMeatLocation = SpawnAILocation + (0.f, 0.f, 1.f);
 
 	// To get the rotation of the spawning AI
 	FRotator SpawnRotation;
@@ -61,13 +61,18 @@ void ASpawnVolume::SpawnActors()
 	if (world && AIClassReference && MeatClassReference)
 	{
 		FActorSpawnParameters SpawnParams;
-		APickableItem* const Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
-		AAIPatrol* const Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnAILocation, SpawnRotation, SpawnParams);
+
+		APickableItem* Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
+		AAIPatrol* Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnAILocation, SpawnRotation, SpawnParams);
 		
 		ActorSpawned++;
 		Bot->Spawner = this;
 
 
+		Meat->Owner = Bot;
+		Meat->APickableItem::TogglePhysicsAndCollision();
+		Meat->AttachToComponent(Bot->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bot->SocketName);
+		Bot->PossessedObject = Meat;
 	}
 }
 
