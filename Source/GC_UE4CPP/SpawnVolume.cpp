@@ -81,7 +81,7 @@ void ASpawnVolume::SpawnActors()
 	// Spawn the third AI, 60 second
 	if (AISpawned == 2)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 15.0f, false);
+		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 60.0f, false);
 	}
 	// Spawn every 0 ~ 5 seconds when an AI exit
 	if (AISpawned >= 3 && AIOnMap < 3 )
