@@ -28,7 +28,7 @@ void UMyUserWidget::NativeConstruct()
 
 void UMyUserWidget::OnStartButtonClicked()
 {
-	UGameplayStatics::OpenLevel(this, "Thomas", false);
+	UGameplayStatics::OpenLevel(this, "MainLevel", false);
 }
 
 void UMyUserWidget::OnOptionsButtonClicked()

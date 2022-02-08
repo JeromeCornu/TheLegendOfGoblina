@@ -12,6 +12,7 @@
 
 
 
+
 //constructeur et definition du game state
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
@@ -22,8 +23,8 @@ AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 
 void AGC_UE4CPPGameModeBase::BeginPlay()
 {
-	//InGameHUD = Cast<UInGameUserWidgetclass>(GetWorld()->GetFirstPlayerController()->widget);
 	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
+	
 	
 }
 
@@ -41,6 +42,7 @@ void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 
 void AGC_UE4CPPGameModeBase::Lose()
 {
+	
 	if (!EndScreenClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
@@ -52,14 +54,20 @@ void AGC_UE4CPPGameModeBase::Lose()
 		UE_LOG(LogTemp, Warning, TEXT("Menu Class was not defined"));
 		return;
 	}
+	InGameHUD->RemoveFromViewport();
 
 	EndScreen->AddToViewport();
 	EndScreen->SetVisibility(ESlateVisibility::Visible);
+	UserWidgetEndScreen = Cast<UEndScreen>(this->EndScreen);
+	UserWidgetEndScreen->Lose();
+
+	PlayerController->UnPossess();
 	
 }
 
 void AGC_UE4CPPGameModeBase::Victory()
 {
+	
 	UE_LOG(LogTemp, Warning, TEXT("c'est une victoire"));
 	if (!EndScreenClass)
 	{
@@ -74,9 +82,14 @@ void AGC_UE4CPPGameModeBase::Victory()
 		UE_LOG(LogTemp, Warning, TEXT("end Class was not defined"));
 		return;
 	}
+	InGameHUD->RemoveFromViewport();
 
-	EndScreen->AddToViewport(1);
+	EndScreen->AddToViewport();
 	EndScreen->SetVisibility(ESlateVisibility::Visible);
+	UserWidgetEndScreen = Cast<UEndScreen>(this->EndScreen);
+	UserWidgetEndScreen->Win();
+
+	PlayerController->UnPossess();
 	
 }
 

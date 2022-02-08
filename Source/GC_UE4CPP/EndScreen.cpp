@@ -45,12 +45,12 @@ void UEndScreen::Lose()
 {
 	VictoryDefeatText->SetColorAndOpacity( FSlateColor(FLinearColor::Red));
 	VictoryDefeatText->SetText(FText::FromString("YOU LOST"));
-	VictoryDefeatText->TextDelegate.BindUFunction(GameMode, "Lose");
+	
 }
 
 void UEndScreen::Win()
 {
-	VictoryDefeatText->SetColorAndOpacity(FSlateColor(FLinearColor::Red));
+	VictoryDefeatText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
 	VictoryDefeatText->SetText(FText::FromString("YOU WON"));
-	VictoryDefeatText->TextDelegate.BindUFunction(GameMode, "Victory");
+	
 }
