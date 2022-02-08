@@ -35,7 +35,7 @@ void ASpawnVolume::BeginPlay()
 	// Connect the overlapping function to the sphere component 
 	SpawnVolume->OnComponentBeginOverlap.AddDynamic(this, &ASpawnVolume::OnOverlapDestroy);
 
-	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 1.0f, false);
+	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 0.1f, false);
 }
 
 
@@ -55,6 +55,7 @@ void ASpawnVolume::SpawnActors()
 	if (world && AIClassReference && MeatClassReference)
 	{
 		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		APickableItem* Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
 		AAIPatrol* Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnAILocation, SpawnRotation, SpawnParams);
@@ -75,12 +76,12 @@ void ASpawnVolume::SpawnActors()
 	// Spawn the second AI, ~0 second
 	if (AISpawned == 1)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 1.0f, false);
+		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 0.1f, false);
 	}
 	// Spawn the third AI, 60 second
 	if (AISpawned == 2)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 60.0f, false);
+		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 15.0f, false);
 	}
 	// Spawn every 0 ~ 5 seconds when an AI exit
 	if (AISpawned >= 3 && AIOnMap < 3 )
