@@ -9,7 +9,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacterController.h"
 #include "AIPatrol.h"
-#include "BaseCharacter.h"
 
 
 
@@ -44,15 +43,13 @@ void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 
 void AGC_UE4CPPGameModeBase::Lose()
 {
-	TSubclassOf<ABaseCharacter> ClassToFind;
-	ClassToFind = ABaseCharacter::StaticClass();
-	TArray<AActor*> TabActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, TabActors);
-		for (AActor* list : TabActors)
-		{
-			AAIPatrol* Target = Cast<AAIPatrol>(TabActors);
+	//TArray<AActor*> TabAI;
+	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrol, TabAI);
+		//for (AActor* TabAI : TabAI)
+		//{
+			//AAIPatrol* Target = Cast<AAIPatrol>(TabAI);
 
-		}
+		//}
 	if (!EndScreenClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));

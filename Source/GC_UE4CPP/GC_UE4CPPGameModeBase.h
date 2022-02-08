@@ -16,9 +16,10 @@ class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 	class APlayerCharacterController* PlayerController;
 	class UInGameUserWidgetclass* InGameHUD;
 	class UEndScreen* UserWidgetEndScreen;
+	class AAIPatrol;
 		
 public:
-
+	
 	AGC_UE4CPPGameModeBase();
 	virtual ~AGC_UE4CPPGameModeBase() = default;
 
