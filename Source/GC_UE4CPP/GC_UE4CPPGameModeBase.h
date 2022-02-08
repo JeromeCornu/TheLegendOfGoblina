@@ -15,6 +15,7 @@ class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	class APlayerCharacterController* PlayerController;
 	class UInGameUserWidgetclass* InGameHUD;
+	class UEndScreen* UserWidgetEndScreen;
 		
 public:
 
