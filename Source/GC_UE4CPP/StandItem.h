@@ -9,7 +9,6 @@
 #include "StandItem.generated.h"
 
 class ABaseCharacter;
-class ATargetPoint;
 class APickableItem;
 
 UCLASS()
@@ -28,9 +27,6 @@ public:
 	UPROPERTY(EditAnywhere)
 		FName SocketName;
 	
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<ATargetPoint> TargetPointClass;
-
 	APickableItem* LaidItem;
 
 protected:
