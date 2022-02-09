@@ -37,6 +37,7 @@ void APickableItem::TogglePhysicsAndCollision()
 void APickableItem::PickUpItem()
 {
 	Owner->PossessedObject = this;
+	Owner->ABaseCharacter::SlowCharacter();
 
 	TogglePhysicsAndCollision();
 	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Owner->SocketName);
@@ -45,6 +46,7 @@ void APickableItem::PickUpItem()
 void APickableItem::ThrowItem()
 {
 	Owner->PossessedObject = nullptr;
+	Owner->ABaseCharacter::NormalSpeedCharacter();
 
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	TogglePhysicsAndCollision();
@@ -53,6 +55,8 @@ void APickableItem::ThrowItem()
 void APickableItem::LayItemOnStand(UStaticMeshComponent* Mesh, FName Socket)
 {
 	Owner->PossessedObject = nullptr;
+	Owner->ABaseCharacter::NormalSpeedCharacter();
+
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	SetActorLocationAndRotation(StaticMesh->GetSocketLocation(Socket), StaticMesh->GetSocketQuaternion(Socket));
 	AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Socket);
@@ -61,6 +65,8 @@ void APickableItem::LayItemOnStand(UStaticMeshComponent* Mesh, FName Socket)
 void APickableItem::TakeItemOnStand()
 {
 	Owner->PossessedObject = this;
+	Owner->ABaseCharacter::SlowCharacter();
+
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	AttachToComponent(Owner->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Owner->SocketName);
 }

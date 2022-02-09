@@ -28,6 +28,12 @@ ABaseCharacter::ABaseCharacter()
 	InteractCapsule->InitCapsuleSize(150.0f, 200.0f);
 	InteractCapsule->SetCollisionProfileName(TEXT("OverlapAll"));
 
+	// Variables of Character's speed
+	BaseCharacterMovement = GetCharacterMovement();
+	WalkSpeed = BaseCharacterMovement->MaxWalkSpeed;
+
+	MultiplicatorSlowSpeed = 2;
+
 	// Blocks all interactions when the character is dead
 	bDead = false;
 
@@ -65,16 +71,12 @@ void ABaseCharacter::Interact()
 		
 		if (InteractableObject) 
 		{
-		
 			InteractableObject->Interact(this);
 		}
 		else if (PossessedObject)
 		{
-			
 			PossessedObject->Interact(this);
 		}
-		
-		
 	}
 }
 
@@ -98,5 +100,16 @@ void ABaseCharacter::InteractiveObjectEndOverlap(UPrimitiveComponent* Overlapped
 		InteractableObject = nullptr;
 	}
 }
+
+void ABaseCharacter::SlowCharacter()
+{
+	BaseCharacterMovement->MaxWalkSpeed = WalkSpeed / MultiplicatorSlowSpeed;
+}
+
+void ABaseCharacter::NormalSpeedCharacter()
+{
+	BaseCharacterMovement->MaxWalkSpeed = WalkSpeed;
+}
+
 
 
