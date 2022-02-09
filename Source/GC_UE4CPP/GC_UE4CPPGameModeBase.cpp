@@ -44,7 +44,7 @@ void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 
 void AGC_UE4CPPGameModeBase::Lose()
 {
-	TSubclassOf<ABaseCharacter> ClassToFind;
+	/*TSubclassOf<ABaseCharacter> ClassToFind;
 	ClassToFind = ABaseCharacter::StaticClass();
 	TArray<AActor*> TabActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, TabActors);
@@ -53,6 +53,7 @@ void AGC_UE4CPPGameModeBase::Lose()
 			AAIPatrol* Target = Cast<AAIPatrol>(TabActors);
 
 		}
+		*/
 	if (!EndScreenClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
