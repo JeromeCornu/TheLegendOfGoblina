@@ -37,6 +37,11 @@ public:
 
 	void Despawn();
 
+	UFUNCTION()
+		void WIN();
+	UFUNCTION()
+		void LOOSE();
+
 private:
 
 	// Called when the player has been touch

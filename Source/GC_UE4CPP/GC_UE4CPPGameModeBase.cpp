@@ -158,6 +158,16 @@ void AGC_UE4CPPGameModeBase::PauseGame()
 	}
 }
 
+float AGC_UE4CPPGameModeBase::GetAI()
+{
+	return GetGameState<AMyGameStateBase>()->NumberOfAI;
+}
+
+void AGC_UE4CPPGameModeBase::SetAI(float AI)
+{
+	return GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
+}
+
 
 
 

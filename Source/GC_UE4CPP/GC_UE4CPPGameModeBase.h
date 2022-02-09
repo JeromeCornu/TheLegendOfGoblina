@@ -40,6 +40,11 @@ public:
 		void GetaSteak();
 	UFUNCTION()
 		void PauseGame();
+	
+	UFUNCTION()
+		float GetAI();
+	UFUNCTION()
+		void SetAI(float NumberAI);
 
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UUserWidget> EndScreenClass;

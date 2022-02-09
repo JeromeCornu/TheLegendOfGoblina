@@ -74,3 +74,12 @@ void AAIPatrol::Despawn()
 
 	Destroy();
 }
+
+void AAIPatrol::WIN()
+{
+
+}
+
+void AAIPatrol::LOOSE()
+{
+}
