@@ -8,6 +8,7 @@
 #include "DrawDebugHelpers.h"
 #include "PlayableCharacter.h"
 #include "PickableItem.h"
+#include "GC_UE4CPPGameModeBase.h"
 #include "Components/SphereComponent.h"
 
 // Detection + call functions when you've been see
@@ -30,6 +31,8 @@ AAIPatrol::AAIPatrol()
 void AAIPatrol::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
 void AAIPatrol::Tick(float DeltaTime)
@@ -59,6 +62,10 @@ void AAIPatrol::OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* Other
 void AAIPatrol::Despawn() 
 {
 	AController* AIController = GetController<AController>();
+
+	
+	// float NumberAI = GameMode->GetAI();
+	// GameMode->SetAI(NumberAI - 1);
 
 	if (AIController)
 	{
