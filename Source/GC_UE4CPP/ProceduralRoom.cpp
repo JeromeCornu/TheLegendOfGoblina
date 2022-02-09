@@ -8,7 +8,6 @@
 #include "Floor.h"
 #include "StandItem.h"
 #include "PickableItem.h"
-#include "PatrolSpawnerDoor.h"
 
 // Sets default values
 AProceduralRoom::AProceduralRoom()
@@ -167,11 +166,11 @@ void AProceduralRoom::BuildPatrolSpawn(const FVector& BuildOffset)
 	FRotator Rotation(0.f, 90.f, 0.f);
 	FVector Location = BuildOffset;
 
-	Location.X += (NbFloorTilesX - 1) * FloorWidth + WallHorizontalOffset;
+	Location.X += (NbFloorTilesX - 1) * FloorWidth + DoorHorizontalOffset;
 	Location.Y += (PatrolSpawnIndex + (PatrolSpawnSize - 1) / 2.f) * FloorWidth;
-	Location.Z += FloorHeight;
+	Location.Z += DoorHeight;
 
-	GetWorld()->SpawnActor<APatrolSpawnerDoor>(PatrolSpawnerClass, Location, Rotation);
+	GetWorld()->SpawnActor<AActor>(PatrolSpawnerClass, Location, Rotation);
 }
 
 void AProceduralRoom::FillProceduralRoom()

@@ -117,6 +117,10 @@ private:
 		float WallHeight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Wall Mesh", meta = (AllowPrivateAccess = "true"))
 		float WallHorizontalOffset;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Door Mesh", meta = (AllowPrivateAccess = "true"))
+		float DoorHeight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room Meshes Dimensions | Door Mesh", meta = (AllowPrivateAccess = "true"))
+		float DoorHorizontalOffset;
 
 
 	int32 NbFloorTilesX;
