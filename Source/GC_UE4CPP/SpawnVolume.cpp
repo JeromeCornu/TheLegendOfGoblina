@@ -25,7 +25,6 @@ ASpawnVolume::ASpawnVolume()
 	RootComponent = SpawnVolume;
 
 	AISpawned = 0;
-	NumberAI = 0; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! a mettre en com
 
 	// Set the SpawnDelay range
 	SpawnDelayRangeLow = 0.0f;
@@ -47,7 +46,7 @@ void ASpawnVolume::BeginPlay()
 void ASpawnVolume::SpawnActors()
 {	
 	NumberMeat = GameMode->GetSteaks();
-	//NumberAI = GameMode->GetAI();      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	NumberAI = GameMode->GetAI();
 
 	SpawnLocation = GetRandomLocation();
 
@@ -64,7 +63,7 @@ void ASpawnVolume::SpawnActors()
 		Bot = GetWorld()->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, SpawnRotation, SpawnParamsAI);
 		BotController = Bot->GetController<AAIPatrolController>();
 
-		// GameMode->SetAI(NumberAI + 1); !!!!!!!!!!!!!!!
+		GameMode->SetAI(NumberAI + 1);
 
 		Bot->Spawner = this;
 
@@ -80,7 +79,7 @@ void ASpawnVolume::SpawnActors()
 		{
 			AISpawned++;
 		}
-		// GameMode->SetAI(NumberAI + 1);   !!!!!!!!!!!!!!!!!!!!!
+		GameMode->SetAI(NumberAI + 1);
 	}
 
 	TimerBeforeNextSpawn();
