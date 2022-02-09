@@ -16,6 +16,14 @@ enum class EWallOrientation
 	EWO_Left
 };
 
+enum class EObjectOnObstacle
+{
+	EOOO_Empty,
+	EOOO_Obstacle,
+	EOOO_Stand,
+	EOOO_StandWithFood
+};
+
 class Floor;
 class UBoxComponent;
 
@@ -34,7 +42,7 @@ protected:
 
 private:
 
-	void SetupConstrainedParameters();
+	void SetupLayOutParameters();
 
 	void BuildEmptyRoom();
 
@@ -46,11 +54,13 @@ private:
 
 	void SpawnStandsInPartition(TArray<TSharedPtr<FloorNode>>& Partition);
 
-	void SpawnObstacleInNode(const FCornerCoordinates& Coordinates, bool bHasStandOnIt, bool bHasObstacleOnIt);
+	void SpawnObstacleInNode(const FCornerCoordinates& Coordinates, EObjectOnObstacle ObjectOnObstacle);
 
 	FVector GetRandomPointInSquare(const FVector& UpperLeft, const FVector& LowerRight);
 
 	void AddObstacleInstanceAtLocation(const FVector& Location);
+
+	void SpawnStandWithFoodAtLocation(const FVector& Location);
 
 	void SpawnObstaclesInPartition(const TArray<TSharedPtr<FloorNode>>& Partition);
 
@@ -79,6 +89,10 @@ private:
 		int32 NumberOfStands;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> StandClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		int32 NbFoodToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> FoodClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> PatrolSpawnerClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural Room Parameters", meta = (AllowPrivateAccess = "true"))

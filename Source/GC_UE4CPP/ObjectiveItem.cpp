@@ -60,6 +60,9 @@ void AObjectiveItem::TriggerDestroy()
 {
 	
 	GameMode->GetaSteak();
+	float NumberMeat = GameMode->GetSteaks();
+	GameMode->SetSteaks(NumberMeat - 1);
+
 	Item->Destroy();
 	Item = nullptr;
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item destroyed");

@@ -7,73 +7,96 @@
 #include "Components/BoxComponent.h"
 #include "SpawnVolume.generated.h"
 
+class AAIPatrol;
+class AAIPatrolController;
+class APickableItem;
 UCLASS()
 class GC_UE4CPP_API ASpawnVolume : public AActor
 {
 	GENERATED_BODY()
-	
+		class AGC_UE4CPPGameModeBase* GameMode;
+
 public:	
-	// Sets default values for this actor's properties
 	ASpawnVolume();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
 
-	// A class reference for AIPatrol
+	// Class references
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
-		TSubclassOf<class AAIPatrol> AIClassReference;
+		TSubclassOf<AAIPatrol> AIClassReference;
 
-	// A class reference for PickableItem
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
-		TSubclassOf<class APickableItem> MeatClassReference;
+		TSubclassOf<APickableItem> MeatClassReference;
 
-	// A BoxComponent which act as spawn volume to spawn
+	UPROPERTY(VisibleAnywhere, Category = "AI Reference")
+		AAIPatrol* Bot;
+
+	UPROPERTY(VisibleAnywhere, Category = "AI Reference")
+		AAIPatrolController* BotController;
+
+
+	// A BoxComponent which act as spawner
 	UPROPERTY(EditAnywhere, Category = "Components")
 		UBoxComponent* SpawnVolume;
 
+	// BB's values
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName IsPatrollingKey;
 
 
-	// Timer used to calcul time between each spawn
+	// Timer
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 		FTimerHandle SpawnTimer;
 
-	// Minimum SpawnDelay
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
 		float SpawnDelayRangeLow;
 
-	// Maximum SpawnDelay
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
 		float SpawnDelayRangeHigh;
 
-	// The current SpawnDelay
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		float SpawnDelay;
 
-		bool bCanBeDestroy;
 
+	// Number of Actors
+	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
+		float NumberMeat;
 
-	// Number of units to spawn
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
+		float NumberAI;
+
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
 		int32 ActorToSpawn;
 
-	// Number of units already spawned
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		int32 AISpawned;
 
-	// Number of units already on map
+
+	// Properties of Actors
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
-		int32 AIOnMap;
+		FVector SpawnLocation;
+
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
+		FVector SpawnMeatLocation;
+
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
+		FRotator SpawnRotation;
 
 
-	// Used to spawn Actors
 	UFUNCTION()
 		void SpawnActors();
+
+	UFUNCTION()
+		void SpawnMeat();
+
+	UFUNCTION()
+		void TimerBeforeNextSpawn();
 
 	// Used to returns a FVector which has random location coordinates
 	UFUNCTION()
 		FVector GetRandomLocation();
 
-	UFUNCTION()
-		void OnOverlapDestroy(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

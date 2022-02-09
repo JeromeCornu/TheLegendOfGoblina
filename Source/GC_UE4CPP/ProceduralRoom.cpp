@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Floor.h"
 #include "StandItem.h"
+#include "PickableItem.h"
 #include "PatrolSpawnerDoor.h"
 
 // Sets default values
@@ -35,6 +36,7 @@ AProceduralRoom::AProceduralRoom()
 	SplitFactor = 2.5f;
 	ObstaclesDensity = 0.4f;
 	NumberOfStands = 10;
+	NbFoodToSpawn = 1;
 	SafeZoneAccessSize = 2;
 	PatrolSpawnSize = 3;
 	bDrawDebugGrid = false;
@@ -53,14 +55,14 @@ void AProceduralRoom::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetupConstrainedParameters();
+	SetupLayOutParameters();
 
 	BuildEmptyRoom();
 
 	FillProceduralRoom();
 }
 
-void AProceduralRoom::SetupConstrainedParameters() 
+void AProceduralRoom::SetupLayOutParameters() 
 {
 	if (UnitNodeWidth < ObstacleWidth) 
 	{
@@ -198,13 +200,20 @@ void AProceduralRoom::SpawnStandsInPartition(TArray<TSharedPtr<FloorNode>>& Part
 
 		FCornerCoordinates Coordinates = Partition[RandomIndex]->GetCornerCoordinates();
 
-		SpawnObstacleInNode(Coordinates, true, false);
+		if (i < NbFoodToSpawn)
+		{
+			SpawnObstacleInNode(Coordinates, EObjectOnObstacle::EOOO_StandWithFood);
+		}
+		else
+		{
+			SpawnObstacleInNode(Coordinates, EObjectOnObstacle::EOOO_Stand);
+		}
 
 		Partition.RemoveAt(RandomIndex);
 	}
 }
 
-void AProceduralRoom::SpawnObstacleInNode(const FCornerCoordinates& Coordinates, bool bHasStandOnIt = false, bool bHasObstacleOnIt = false)
+void AProceduralRoom::SpawnObstacleInNode(const FCornerCoordinates& Coordinates, EObjectOnObstacle ObjectOnObstacle)
 {
 	FVector CollisionAvoidanceMargin(ObstacleWidth / 2.f, ObstacleWidth / 2.f, 0.f);
 	FVector UpperLeft = FVector(Coordinates.UpperLeftX * UnitNodeWidth, Coordinates.UpperLeftY * UnitNodeWidth, 0.f) + CollisionAvoidanceMargin;
@@ -214,15 +223,22 @@ void AProceduralRoom::SpawnObstacleInNode(const FCornerCoordinates& Coordinates,
 	FVector Location = RandomPointInSquare + RoomOffset;
 	AddObstacleInstanceAtLocation(Location);
 
-	if (bHasStandOnIt) 
+	if (ObjectOnObstacle != EObjectOnObstacle::EOOO_Empty)
 	{
 		FVector UpperLocation = Location + FVector(0.f, 0.f, ObstacleHeight);
-		GetWorld()->SpawnActor<AStandItem>(StandClass, UpperLocation, FRotator::ZeroRotator);
-	}
-	else if (bHasObstacleOnIt) 
-	{
-		FVector UpperLocation = Location + FVector(0.f, 0.f, ObstacleHeight);
-		AddObstacleInstanceAtLocation(UpperLocation);
+
+		if (ObjectOnObstacle == EObjectOnObstacle::EOOO_Obstacle)
+		{
+			AddObstacleInstanceAtLocation(UpperLocation);
+		}
+		else if (ObjectOnObstacle == EObjectOnObstacle::EOOO_Stand)
+		{
+			GetWorld()->SpawnActor<AStandItem>(StandClass, UpperLocation, FRotator::ZeroRotator);
+		}
+		else if (ObjectOnObstacle == EObjectOnObstacle::EOOO_StandWithFood)
+		{
+			SpawnStandWithFoodAtLocation(UpperLocation);
+		}
 	}
 }
 
@@ -241,6 +257,21 @@ void AProceduralRoom::AddObstacleInstanceAtLocation(const FVector& Location)
 	ObstaclesHISMC->AddInstance(FTransform(Rotation, Location));
 }
 
+void AProceduralRoom::SpawnStandWithFoodAtLocation(const FVector& Location)
+{
+	AStandItem* Plate = GetWorld()->SpawnActor<AStandItem>(StandClass, Location, FRotator::ZeroRotator);
+	UStaticMeshComponent* Mesh = Plate->StaticMesh;
+	FName Socket = Plate->SocketName;
+
+	FVector FoodLocation = Mesh->GetSocketLocation(Socket);
+	FRotator FoodRotation = Mesh->GetSocketRotation(Socket);
+
+	APickableItem* Food = GetWorld()->SpawnActor<APickableItem>(FoodClass, FoodLocation, FoodRotation);
+	Food->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Socket);
+
+	Plate->LaidItem = Food;
+}
+
 void AProceduralRoom::SpawnObstaclesInPartition(const TArray<TSharedPtr<FloorNode>>& Partition)
 {
 	for (int32 i = 0; i < Partition.Num(); i++)
@@ -251,7 +282,7 @@ void AProceduralRoom::SpawnObstaclesInPartition(const TArray<TSharedPtr<FloorNod
 
 		if (DiceRoll < ObstaclesDensity)
 		{
-			SpawnObstacleInNode(Coordinates, false, true);
+			SpawnObstacleInNode(Coordinates, EObjectOnObstacle::EOOO_Obstacle);
 		}
 	}
 }

@@ -5,6 +5,13 @@
 #include "AIPatrol.h"
 #include "AIPatrolController.h"
 #include "PickableItem.h"
+
+#include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+
+#include "GC_UE4CPPGameModeBase.h"
+#include "BaseCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -18,13 +25,13 @@ ASpawnVolume::ASpawnVolume()
 	RootComponent = SpawnVolume;
 
 	AISpawned = 0;
-	AIOnMap = 0;
-	// TODO bCanBeDestroy a mettre dans le comportement de l'IA qui fait que quand elle se dirige vers la sortie au BT elle peut etre detruite * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	bCanBeDestroy = false;
+	NumberAI = 0; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! a mettre en com
 
 	// Set the SpawnDelay range
 	SpawnDelayRangeLow = 0.0f;
 	SpawnDelayRangeHigh = 5.0f;
+
+	IsPatrollingKey = "IsPatrolling";
 }
 
 
@@ -32,47 +39,77 @@ void ASpawnVolume::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Connect the overlapping function to the sphere component 
-	SpawnVolume->OnComponentBeginOverlap.AddDynamic(this, &ASpawnVolume::OnOverlapDestroy);
-
+	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 0.1f, false);
 }
 
 
 void ASpawnVolume::SpawnActors()
-{
-	UWorld* world = GetWorld();
+{	
+	NumberMeat = GameMode->GetSteaks();
+	//NumberAI = GameMode->GetAI();      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	FVector SpawnAILocation = GetRandomLocation();
-	FVector SpawnMeatLocation = SpawnAILocation + (0.f, 0.f, 1.f);
+	SpawnLocation = GetRandomLocation();
 
 	// To get the rotation of the spawning AI
-	FRotator SpawnRotation;
 	SpawnRotation.Yaw = 0.f;	// X rotation
 	SpawnRotation.Pitch = 0.f;	// Y rotation
 	SpawnRotation.Roll = 0.f;	// Z rotation
 
-	if (world && AIClassReference && MeatClassReference)
+	if (GetWorld() && AIClassReference && MeatClassReference)
 	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		FActorSpawnParameters SpawnParamsAI;
+		SpawnParamsAI.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		APickableItem* Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
-		AAIPatrol* Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnAILocation, SpawnRotation, SpawnParams);
-		
+		Bot = GetWorld()->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, SpawnRotation, SpawnParamsAI);
+		BotController = Bot->GetController<AAIPatrolController>();
+
+		// GameMode->SetAI(NumberAI + 1); !!!!!!!!!!!!!!!
+
+		Bot->Spawner = this;
+
+		BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, true);
+		BotController->bIsPatrolling = true;
+
+		if (NumberMeat < 5)
+		{
+			SpawnMeat();
+		}
+		// to avoid having an unnecessarily large number of AISpawned
 		if (AISpawned < 5)
 		{
 			AISpawned++;
 		}
-		AIOnMap++;
-		Bot->Spawner = this;
-
-		Meat->Owner = Bot;
-		Meat->APickableItem::TogglePhysicsAndCollision();
-		Meat->AttachToComponent(Bot->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bot->SocketName);
-		Bot->PossessedObject = Meat;
+		// GameMode->SetAI(NumberAI + 1);   !!!!!!!!!!!!!!!!!!!!!
 	}
 
+	TimerBeforeNextSpawn();
+}
+
+void ASpawnVolume::SpawnMeat()
+{
+	FActorSpawnParameters SpawnParamsMeat;
+	SpawnParamsMeat.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	APickableItem* Meat = GetWorld()->SpawnActor<APickableItem>(MeatClassReference, SpawnLocation, SpawnRotation, SpawnParamsMeat);
+
+	Meat->Owner = Bot;
+	Meat->APickableItem::TogglePhysicsAndCollision();
+	Meat->AttachToComponent(Bot->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bot->SocketName);
+
+	Bot->PossessedObject = Meat;
+	Bot->bCarry = true;
+	Bot->ABaseCharacter::SlowCharacter();
+
+	GameMode->SetSteaks(NumberMeat + 1);
+
+	BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, false);
+	BotController->bIsPatrolling = false;
+}
+
+
+void ASpawnVolume::TimerBeforeNextSpawn()
+{
 	// Spawn the second AI, ~0 second
 	if (AISpawned == 1)
 	{
@@ -81,16 +118,18 @@ void ASpawnVolume::SpawnActors()
 	// Spawn the third AI, 60 second
 	if (AISpawned == 2)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 15.0f, false);
+		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 60.0f, false);
 	}
 	// Spawn every 0 ~ 5 seconds when an AI exit
-	if (AISpawned >= 3 && AIOnMap < 3 )
+	if (AISpawned >= 3 && NumberAI < 3)
 	{
 		SpawnDelay = FMath::FRandRange(SpawnDelayRangeLow, SpawnDelayRangeHigh);
 		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
 	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, TEXT("Created !"));
+	if (NumberMeat >= 5)
+	{
+		// Bot->bIsPatrolling = true;
+	}
 }
 
 
@@ -104,15 +143,3 @@ FVector ASpawnVolume::GetRandomLocation()
 
 	return RandomPoints;
 }
-
-
-void ASpawnVolume::OnOverlapDestroy(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if ((OtherActor != nullptr) && (OtherComp != nullptr) && (OtherActor != this) && (Cast<AAIPatrol>(OtherActor)) && (bCanBeDestroy == true))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("Overlap so destroy you !"));
-		AIOnMap--;
-		Destroy();
-	}
-}
-

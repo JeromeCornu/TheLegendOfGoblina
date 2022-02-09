@@ -5,45 +5,62 @@
 // #include "CoreMinimal.h"
 #include "AIController.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
+#include "Perception/AIPerceptionTypes.h"
+
 #include "AIPatrolController.generated.h"
 
-/**
- * 
- */
+class UAIPerceptionComponent;
+class UAISenseConfig_Sight;
+
 UCLASS()
 class GC_UE4CPP_API AAIPatrolController : public AAIController
 {
 	GENERATED_BODY()
 
-		// Blackboard keys
-		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the goal location
-			FName LocationToGoKey;
-
-		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the player location
-			FName PlayerKey;
-
-		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the goal location
-			FName ExitPointKey;
-
-		UPROPERTY(EditDefaultsOnly, Category = "AI") // reference to the goal location
-			FName PossessMeatKey;
-
-		TArray<AActor*> PatrolPoints;
-
-		void OnPossess(APawn* InPawn); // function called when possess a pawn
-
-
 public:
-
 	AAIPatrolController();
 
-	void SetPlayerCaught(APawn* _Pawn);
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+		UAIPerceptionComponent* PerceptionComp;
 
-	int32 CurrentPatrolPoint = 0;
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+		UAISenseConfig_Sight* SightConfig;
+
+	// Blackboard keys
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName PlayerKey;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName PossessFoodKey;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName InvestigateLocationKey;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName ExitKey;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+		FName IsPatrollingKey;
+	
+	UPROPERTY(EditAnywhere, Category = "AI")
+		bool bIsPatrolling;
+
+	AActor* ExitActor;
+
+	TArray<AActor*> Plates;
+	int32 PlateIndex = 0;
 
 	// Inline getter Functions
-
 	FORCEINLINE UBlackboardComponent* GetBlackboardComp() const { return Blackboard; }
-	FORCEINLINE TArray<AActor*> GetPatrolPoints() const { return PatrolPoints; }
-	// FORCEINLINE --> forces compiler to do inline unconditionally
+	FORCEINLINE TArray<AActor*> GetPlatesArray() const { return Plates; }
+
+	// function called when possess a pawn
+	void OnPossess(APawn* InPawn);
+
+	// function called when possess a pawn
+	void OnUnPossess();
+
+	UFUNCTION()
+		void OnSee(AActor* Actor, FAIStimulus Stimulus);
+
+
+protected:
+	virtual void BeginPlay() override;
+
 };

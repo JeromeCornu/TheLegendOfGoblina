@@ -18,7 +18,9 @@ public:
 	virtual ~AMyGameStateBase() = default;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-		float NumberOfSteaks;
+		int32 NumberOfSteaks;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 NumberOfAI;
+
 };
