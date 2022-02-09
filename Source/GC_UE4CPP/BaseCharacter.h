@@ -23,6 +23,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		bool bCarry;
+
+	UPROPERTY(VisibleAnywhere)
+		UCharacterMovementComponent* BaseCharacterMovement;
+
+	UPROPERTY(VisibleAnywhere)
+		float WalkSpeed;
 	
 	UPROPERTY(EditAnywhere)
 		FName SocketName;
@@ -43,4 +49,11 @@ public:
 	
 	UFUNCTION()
 		void InteractiveObjectEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+		void SlowCharacter();
+
+	UFUNCTION()
+		void NormalSpeedCharacter();
+
 };

@@ -19,8 +19,6 @@ ASpawnVolume::ASpawnVolume()
 
 	AISpawned = 0;
 	AIOnMap = 0;
-	// TODO bCanBeDestroy a mettre dans le comportement de l'IA qui fait que quand elle se dirige vers la sortie au BT elle peut etre detruite * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	bCanBeDestroy = false;
 
 	// Set the SpawnDelay range
 	SpawnDelayRangeLow = 0.0f;
@@ -31,9 +29,6 @@ ASpawnVolume::ASpawnVolume()
 void ASpawnVolume::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Connect the overlapping function to the sphere component 
-	SpawnVolume->OnComponentBeginOverlap.AddDynamic(this, &ASpawnVolume::OnOverlapDestroy);
 
 	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 0.1f, false);
 }
@@ -70,6 +65,7 @@ void ASpawnVolume::SpawnActors()
 		Meat->Owner = Bot;
 		Meat->APickableItem::TogglePhysicsAndCollision();
 		Meat->AttachToComponent(Bot->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bot->SocketName);
+		// Bot->bIsPatrolling = true;
 		Bot->PossessedObject = Meat;
 	}
 
@@ -90,7 +86,6 @@ void ASpawnVolume::SpawnActors()
 		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, TEXT("Created !"));
 }
 
 
@@ -104,15 +99,3 @@ FVector ASpawnVolume::GetRandomLocation()
 
 	return RandomPoints;
 }
-
-
-void ASpawnVolume::OnOverlapDestroy(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if ((OtherActor != nullptr) && (OtherComp != nullptr) && (OtherActor != this) && (Cast<AAIPatrol>(OtherActor)) && (bCanBeDestroy == true))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("Overlap so destroy you !"));
-		AIOnMap--;
-		Destroy();
-	}
-}
-
