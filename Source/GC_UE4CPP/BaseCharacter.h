@@ -29,6 +29,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		float WalkSpeed;
+
+	UPROPERTY(EditAnywhere)
+		int MultiplicatorSlowSpeed;
 	
 	UPROPERTY(EditAnywhere)
 		FName SocketName;

@@ -32,6 +32,8 @@ ABaseCharacter::ABaseCharacter()
 	BaseCharacterMovement = GetCharacterMovement();
 	WalkSpeed = BaseCharacterMovement->MaxWalkSpeed;
 
+	MultiplicatorSlowSpeed = 2;
+
 	// Blocks all interactions when the character is dead
 	bDead = false;
 
@@ -101,7 +103,7 @@ void ABaseCharacter::InteractiveObjectEndOverlap(UPrimitiveComponent* Overlapped
 
 void ABaseCharacter::SlowCharacter()
 {
-	BaseCharacterMovement->MaxWalkSpeed = WalkSpeed / 2;
+	BaseCharacterMovement->MaxWalkSpeed = WalkSpeed / MultiplicatorSlowSpeed;
 }
 
 void ABaseCharacter::NormalSpeedCharacter()

@@ -5,6 +5,8 @@
 #include "AIPatrol.h"
 #include "AIPatrolController.h"
 #include "PickableItem.h"
+#include "GC_UE4CPPGameModeBase.h"
+#include "BaseCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -18,7 +20,7 @@ ASpawnVolume::ASpawnVolume()
 	RootComponent = SpawnVolume;
 
 	AISpawned = 0;
-	AIOnMap = 0;
+	NumberAIOnMap = 0;
 
 	// Set the SpawnDelay range
 	SpawnDelayRangeLow = 0.0f;
@@ -37,6 +39,10 @@ void ASpawnVolume::BeginPlay()
 void ASpawnVolume::SpawnActors()
 {
 	UWorld* world = GetWorld();
+	
+	AGC_UE4CPPGameModeBase* GameMode = world->GetAuthGameMode<AGC_UE4CPPGameModeBase>();
+	NumberMeat = GameMode->GetSteaks();
+	//GameMode->GetAI();
 
 	FVector SpawnAILocation = GetRandomLocation();
 	FVector SpawnMeatLocation = SpawnAILocation + (0.f, 0.f, 1.f);
@@ -52,21 +58,38 @@ void ASpawnVolume::SpawnActors()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		APickableItem* Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
+
 		AAIPatrol* Bot = world->SpawnActor<AAIPatrol>(AIClassReference, SpawnAILocation, SpawnRotation, SpawnParams);
 		
+		Bot->Spawner = this;
+		// Bot->bIsPatrolling = true;
+
+		// if there is less than 5 meats, spawn AI with Meat
+		if (NumberMeat < 5)
+		{
+			APickableItem* Meat = world->SpawnActor<APickableItem>(MeatClassReference, SpawnMeatLocation, SpawnRotation, SpawnParams);
+
+			Meat->Owner = Bot;
+			Meat->APickableItem::TogglePhysicsAndCollision();
+			Meat->AttachToComponent(Bot->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bot->SocketName);
+
+			Bot->PossessedObject = Meat;
+			Bot->ABaseCharacter::SlowCharacter();
+			Bot->bCarry = true;						// PB les ia ramassent !!!!
+
+			GameMode->SetSteaks(NumberMeat + 1);
+			// baisser le nb de MeatOnMap quand elles sont mangé par la Gobelina
+			
+			// Bot->bIsPatrolling = false;
+		}
+
 		if (AISpawned < 5)
 		{
 			AISpawned++;
 		}
-		AIOnMap++;
-		Bot->Spawner = this;
 
-		Meat->Owner = Bot;
-		Meat->APickableItem::TogglePhysicsAndCollision();
-		Meat->AttachToComponent(Bot->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bot->SocketName);
-		// Bot->bIsPatrolling = true;
-		Bot->PossessedObject = Meat;
+		NumberAIOnMap++;
+		// baisser le nb de NumberAIOnMap quand elles sont detruite dans le BTDestroy
 	}
 
 	// Spawn the second AI, ~0 second
@@ -80,10 +103,14 @@ void ASpawnVolume::SpawnActors()
 		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 60.0f, false);
 	}
 	// Spawn every 0 ~ 5 seconds when an AI exit
-	if (AISpawned >= 3 && AIOnMap < 3 )
+	if (AISpawned >= 3 && NumberAIOnMap < 3 )
 	{
 		SpawnDelay = FMath::FRandRange(SpawnDelayRangeLow, SpawnDelayRangeHigh);
 		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
+	}
+	if (NumberMeat >= 5)
+	{
+		// Bot->bIsPatrolling = true;
 	}
 
 }

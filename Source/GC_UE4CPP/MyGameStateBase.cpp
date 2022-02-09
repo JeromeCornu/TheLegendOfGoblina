@@ -6,5 +6,4 @@
 AMyGameStateBase::AMyGameStateBase() :
 	NumberOfSteaks(0),NumberOfAI(0)
 {
-
 }

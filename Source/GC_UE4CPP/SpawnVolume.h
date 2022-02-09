@@ -37,6 +37,7 @@ private:
 
 
 	// Timer used to calcul time between each spawn
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 		FTimerHandle SpawnTimer;
 
 	// Minimum SpawnDelay
@@ -48,22 +49,31 @@ private:
 		float SpawnDelayRangeHigh;
 
 	// The current SpawnDelay
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		float SpawnDelay;
 
+
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		bool bCanBeDestroy;
 
 
-	// Number of units to spawn
+
+	// Number of meat already on map
+	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
+		float NumberMeat;
+
+	// Number of AI on map
+	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
+		float NumberAIOnMap;
+
+	// Number of AI to spawn
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
 		int32 ActorToSpawn;
 
-	// Number of units already spawned
+	// Number of AI already spawned
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		int32 AISpawned;
 
-	// Number of units already on map
-	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
-		int32 AIOnMap;
 
 
 	// Used to spawn Actors
