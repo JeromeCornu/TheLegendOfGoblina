@@ -3,61 +3,87 @@
 
 #include "AIPatrolController.h"
 #include "AIPatrol.h"
-#include "AIPatrolTargetPoint.h"
-#include "BTPickUpMeat.h"
+#include "PlayableCharacter.h"
+#include "StandItem.h"
 #include "SpawnVolume.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
 #include "GameFramework/Controller.h"
-#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
 
 // Result of beeing see + connection with the BB and the BT
 AAIPatrolController::AAIPatrolController()
 {
+	PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception Component"));
+	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	PerceptionComp->ConfigureSense(*SightConfig);
+	PerceptionComp->SetDominantSense(SightConfig->GetSenseImplementation());
+
 	// Initialize blackboard keys
 	PlayerKey = "Player";
-	LocationToGoKey = "LocationToGo";
-	ExitPointKey = "ExitPoint";
-	PossessMeatKey = "PossessMeat";
+	PossessFoodKey = "PossessFood";
+	InvestigateLocationKey = "InvestigateLocation";
+	ExitKey = "Exit"; 
+	IsPatrollingKey = "IsPatrolling";
 
-	CurrentPatrolPoint = 0;	
+	bIsPatrolling = false;
+	PlateIndex = -1;	
 }
 
-// The player has been see -> set a key on the blackboard
-void AAIPatrolController::SetPlayerCaught(APawn* _Pawn)
+void AAIPatrolController::BeginPlay()
 {
-	if (Blackboard)
-	{
-		Blackboard->SetValueAsObject(PlayerKey, _Pawn);
-	}
+	Super::BeginPlay();
+
+	PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &AAIPatrolController::OnSee);
 }
 
 void AAIPatrolController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	// Get reference to the character
-	AAIPatrol* AICharacter = Cast<AAIPatrol>(InPawn);
-	UE_LOG(LogTemp, Warning, TEXT("OnPossess AI"));
-
-	AActor* ExitPoint = UGameplayStatics::GetActorOfClass(GetWorld(), ASpawnVolume::StaticClass());
+	ExitActor = UGameplayStatics::GetActorOfClass(GetWorld(), ASpawnVolume::StaticClass());
 
 	// Initialize the BehaviorTree's value : PossessMeat
 	bool bValue = true;
+	AAIPatrol* AICharacter = Cast<AAIPatrol>(InPawn);
 
 	if (AICharacter)
 	{
+		// Populate patrol point array (make an array with all point that are in the game)
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AStandItem::StaticClass(), Plates);
+		
 		RunBehaviorTree(AICharacter->BehaviorTree);
 
-		if (Blackboard)
-		{
-			// Set the variables of the BT
-			Blackboard->SetValueAsObject(ExitPointKey, ExitPoint);
-			Blackboard->SetValueAsBool(PossessMeatKey, bValue);
-		}
-
-		// Populate patrol point array (make an array with all point that are in the game)
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIPatrolTargetPoint::StaticClass(), PatrolPoints);
+		// Set the variables of the BT
+		Blackboard->SetValueAsObject(ExitKey, ExitActor);
+		Blackboard->SetValueAsBool(PossessFoodKey, !bIsPatrolling);
+		Blackboard->SetValueAsBool(IsPatrollingKey, bIsPatrolling);
 	}		
+}
+
+void AAIPatrolController::OnUnPossess()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UnPossessed"));
+}
+
+// The player has been seen -> set a key on the blackboard
+void AAIPatrolController::OnSee(AActor* Actor, FAIStimulus Stimulus)
+{
+	APlayableCharacter* Target = Cast<APlayableCharacter>(Actor);
+
+	if (Blackboard && Target) 
+	{
+		if (Blackboard->GetValueAsObject(PlayerKey))
+		{
+			Blackboard->SetValueAsVector(InvestigateLocationKey, Target->GetActorLocation());
+			Blackboard->ClearValue(PlayerKey);
+		}
+		else 
+		{
+			Blackboard->SetValueAsObject(PlayerKey, Target);
+		}
+	}
 }

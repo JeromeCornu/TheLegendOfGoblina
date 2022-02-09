@@ -22,12 +22,8 @@ protected:
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = "IA")
+	UPROPERTY(EditAnywhere, Category = "AI")
 		class UBehaviorTree* BehaviorTree;
-
-	// Detection of the player
-	UPROPERTY(VisibleAnywhere, Category = "AI")
-		class UPawnSensingComponent* PawnSensingComp;
 
 	// Collision sphere to detect when the player has been catch
 	UPROPERTY(VisibleAnywhere, Category = "AI")
@@ -38,12 +34,9 @@ public:
 
 	ASpawnVolume* Spawner;
 
+	void Despawn();
 
 private:
-
-	// Called when the player has been see
-	UFUNCTION()
-		void OnPlayerCaught(APawn* Pawn);
 
 	// Called when the player has been touch
 	UFUNCTION()

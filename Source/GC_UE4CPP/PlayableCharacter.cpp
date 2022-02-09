@@ -3,6 +3,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "PlayableCharacter.h"
 
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+
 // Sets default values
 APlayableCharacter::APlayableCharacter()
 {
@@ -31,6 +34,8 @@ APlayableCharacter::APlayableCharacter()
 void APlayableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UAIPerceptionSystem::RegisterPerceptionStimuliSource(this, UAISense_Sight::StaticClass(), this);
 }
 
 // Called every frame
