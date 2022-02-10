@@ -27,8 +27,6 @@ void UEndScreen::NativeConstruct()
 	{
 		GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 	}
-	
-	
 }
 
 void UEndScreen::OnRestartButtonClicked()
@@ -45,8 +43,7 @@ void UEndScreen::Lose()
 {
 	VictoryDefeatText->SetColorAndOpacity( FSlateColor(FLinearColor::Red));
 	VictoryDefeatText->SetText(FText::FromString("YOU LOST"));
-	
-	
+	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
 }
 
 void UEndScreen::Win()
@@ -54,5 +51,4 @@ void UEndScreen::Win()
 	VictoryDefeatText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
 	VictoryDefeatText->SetText(FText::FromString("YOU WON"));
 	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
-
 }
