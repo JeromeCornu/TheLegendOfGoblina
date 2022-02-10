@@ -39,7 +39,6 @@ void AObjectiveItem::Tick(float DeltaTime)
 
 void AObjectiveItem::Interact(ABaseCharacter* character)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Objective Item");
 	if (!Item && character->PossessedObject)
 	{
 		character->bCarry = false;
@@ -48,8 +47,6 @@ void AObjectiveItem::Interact(ABaseCharacter* character)
 		{
 			Item->LayItemOnStand(StaticMesh, SocketName);
 			GoblinaRef->StartEatAnimation();
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item collected, destroying in few seconds");
-			
 			
 			GetWorld()->GetTimerManager().SetTimer(TriggerDestroyTimerHandle, this, &AObjectiveItem::TriggerDestroy, DestroyDelay);
 		}
@@ -58,14 +55,11 @@ void AObjectiveItem::Interact(ABaseCharacter* character)
 
 void AObjectiveItem::TriggerDestroy()
 {
-	
 	GameMode->GetaSteak();
 	float NumberMeat = GameMode->GetSteaksInGame();
 	GameMode->SetSteaksInGame(NumberMeat - 1);
 
 	Item->Destroy();
 	Item = nullptr;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item destroyed");
-
 }
 

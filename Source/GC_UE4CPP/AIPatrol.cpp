@@ -22,9 +22,6 @@ AAIPatrol::AAIPatrol()
 	MyCollisionSphere->InitSphereRadius(SphereRadius);
 	MyCollisionSphere->SetCollisionProfileName("Trigger");
 	MyCollisionSphere->SetupAttachment(RootComponent);
-
-	// Connect the overlapping function to the sphere component 
-	MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAIPatrol::OnPlayerCatch);
 	
 	Spawner = nullptr;
 }
@@ -34,7 +31,9 @@ void AAIPatrol::BeginPlay()
 	Super::BeginPlay();
 
 	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
-	//Parent = Cast<ABaseCharacter>(this->GetOwner());
+
+	// Connect the overlapping function to the sphere component 
+	MyCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AAIPatrol::OnPlayerCatch);
 }
 
 void AAIPatrol::Tick(float DeltaTime)
@@ -66,7 +65,6 @@ void AAIPatrol::OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* Other
 void AAIPatrol::Despawn() 
 {
 	AController* AIController = GetController<AController>();
-
 	
 	float NumberAI = GameMode->GetAI();
 	GameMode->SetAI(NumberAI - 1);
@@ -83,10 +81,12 @@ void AAIPatrol::AIEnd()
 {
 	//if the player fail the AI win
 	ABaseCharacter::bDead = !GameMode->bVictory;
-	AController* AIController = GetController<AController>();
-	AIController->UnPossess();
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU Finished AI"));
 
+	AController* AIController = GetController<AController>();
+	if (AIController)
+	{
+		AIController->Destroy();
+	}
 }
 
 

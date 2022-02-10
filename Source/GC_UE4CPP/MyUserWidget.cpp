@@ -14,16 +14,10 @@ void UMyUserWidget::NativeConstruct()
 	{
 		StartButton->OnClicked.AddDynamic(this, &UMyUserWidget::OnStartButtonClicked);
 	}
-	if (OptionsButton)
-	{
-		OptionsButton->OnClicked.AddDynamic(this, &UMyUserWidget::OnOptionsButtonClicked);
-	}
 	if (QuitButton)
 	{
 		QuitButton->OnClicked.AddDynamic(this, &UMyUserWidget::OnQuitButtonClicked);
 	}
-	
-	
 }
 
 void UMyUserWidget::OnStartButtonClicked()
@@ -31,14 +25,7 @@ void UMyUserWidget::OnStartButtonClicked()
 	UGameplayStatics::OpenLevel(this, "MainLevel", false);
 }
 
-void UMyUserWidget::OnOptionsButtonClicked()
-{
-	UE_LOG(LogTemp, Warning, TEXT("vous lancez les options"));
-}
-
 void UMyUserWidget::OnQuitButtonClicked()
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("vous quittez l'application"));
 	FPlatformMisc::RequestExit(false);
 }

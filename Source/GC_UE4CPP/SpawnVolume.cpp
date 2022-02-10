@@ -38,8 +38,6 @@ ASpawnVolume::ASpawnVolume()
 	SpawnDelayRangeHigh = 5.0f;
 
 	IsPatrollingKey = "IsPatrolling";
-
-
 }
 
 
@@ -52,7 +50,6 @@ void ASpawnVolume::BeginPlay()
 	GameMode->DelegateDestroy.AddDynamic(this, &ASpawnVolume::TimerBeforeNextSpawn);
 
 	GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 0.1f, false);
-	UE_LOG(LogTemp, Warning, TEXT("Spawn 1 TIMER"));
 }
 
 void ASpawnVolume::Tick(float Delta)
@@ -99,13 +96,11 @@ void ASpawnVolume::SpawnActors()
 	if (AISpawned == 1)
 	{
 		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 0.1f, false);
-		UE_LOG(LogTemp, Warning, TEXT("Spawn 2 TIMER"));
 	}
 	// Spawn the third AI, 60 second
 	else if (AISpawned == 2)
 	{
-		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 10.0f, false);
-		UE_LOG(LogTemp, Warning, TEXT("Spawn 3 TIMER"));
+		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 60.0f, false);
 	}
 }
 

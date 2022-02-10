@@ -1,8 +1,7 @@
 
+#include "PlayableCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "PlayableCharacter.h"
-
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include"GC_UE4CPPGameModeBase.h"
@@ -10,7 +9,6 @@
 // Sets default values
 APlayableCharacter::APlayableCharacter()
 {
-
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -38,7 +36,6 @@ void APlayableCharacter::BeginPlay()
 	Super::BeginPlay();
 	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 	UAIPerceptionSystem::RegisterPerceptionStimuliSource(this, UAISense_Sight::StaticClass(), this);
-
 }
 
 void APlayableCharacter::PlayerEnd()
@@ -51,11 +48,6 @@ void APlayableCharacter::PlayerEnd()
 	{
 		ABaseCharacter::bDead = false;
 	}
-	
-	
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU Finished player"));
-
-	
 }
 
 

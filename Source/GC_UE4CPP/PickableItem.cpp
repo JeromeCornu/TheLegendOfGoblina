@@ -73,8 +73,6 @@ void APickableItem::TakeItemOnStand()
 
 void APickableItem::Interact(ABaseCharacter* character)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pickable Item"));
-
 	if (character == Owner)
 	{
 		character->bCarry = false;

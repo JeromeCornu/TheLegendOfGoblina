@@ -1,9 +1,9 @@
 
+#include "BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interfaces/InteractInterface.h"
 #include "CharactersAnimInstance.h"
-#include "BaseCharacter.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -51,8 +51,6 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	
-	// Delegates
 	InteractCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABaseCharacter::InteractiveObjectBeginOverlap);
 	InteractCapsule->OnComponentEndOverlap.AddDynamic(this, &ABaseCharacter::InteractiveObjectEndOverlap);
 }
@@ -68,8 +66,6 @@ void ABaseCharacter::Interact()
 {
 	if (!bDead)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("E pressed"));
-		
 		if (InteractableObject) 
 		{
 			InteractableObject->Interact(this);
