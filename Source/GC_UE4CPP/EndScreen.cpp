@@ -33,7 +33,7 @@ void UEndScreen::NativeConstruct()
 
 void UEndScreen::OnRestartButtonClicked()
 {
-	UGameplayStatics::OpenLevel(this, "Thomas", false);
+	UGameplayStatics::OpenLevel(this, "MainLevel", false);
 }
 
 void UEndScreen::OnBackToMenuButtonClicked()

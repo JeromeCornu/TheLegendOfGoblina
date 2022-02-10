@@ -10,6 +10,7 @@
 #include "PickableItem.h"
 #include "GC_UE4CPPGameModeBase.h"
 #include "Components/SphereComponent.h"
+#include "BaseCharacter.h"
 
 // Detection + call functions when you've been see
 AAIPatrol::AAIPatrol()
@@ -33,6 +34,7 @@ void AAIPatrol::BeginPlay()
 	Super::BeginPlay();
 
 	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
+	//Parent = Cast<ABaseCharacter>(this->GetOwner());
 }
 
 void AAIPatrol::Tick(float DeltaTime)
@@ -55,7 +57,9 @@ void AAIPatrol::OnPlayerCatch(UPrimitiveComponent* OverlappedComp, AActor* Other
 	// If the player has been grab -> play defeat
 	if (PlayerReference)
 	{
-		// !!!!! TRIGGER DEFEAT !!!!!
+		GameMode->Lose();
+		PlayerReference->PlayerEnd();
+		AIEnd();
 	}
 }
 
@@ -64,8 +68,8 @@ void AAIPatrol::Despawn()
 	AController* AIController = GetController<AController>();
 
 	
-	// float NumberAI = GameMode->GetAI();
-	// GameMode->SetAI(NumberAI - 1);
+	float NumberAI = GameMode->GetAI();
+	GameMode->SetAI(NumberAI - 1);
 
 	if (AIController)
 	{
@@ -75,11 +79,13 @@ void AAIPatrol::Despawn()
 	Destroy();
 }
 
-void AAIPatrol::WIN()
+void AAIPatrol::AIEnd()
 {
+	//if the player fail the AI win
+	ABaseCharacter::bDead = !GameMode->bVictory;
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU Finished AI"));
 
 }
 
-void AAIPatrol::LOOSE()
-{
-}
+

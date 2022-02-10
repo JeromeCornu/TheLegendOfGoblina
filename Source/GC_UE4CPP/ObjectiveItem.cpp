@@ -60,8 +60,8 @@ void AObjectiveItem::TriggerDestroy()
 {
 	
 	GameMode->GetaSteak();
-	float NumberMeat = GameMode->GetSteaks();
-	GameMode->SetSteaks(NumberMeat - 1);
+	float NumberMeat = GameMode->GetSteaksInGame();
+	GameMode->SetSteaksInGame(NumberMeat - 1);
 
 	Item->Destroy();
 	Item = nullptr;

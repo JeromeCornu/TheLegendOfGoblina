@@ -22,7 +22,14 @@ ASpawnVolume::ASpawnVolume()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpawnVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
-	RootComponent = SpawnVolume;
+	SetRootComponent(SpawnVolume);
+
+	// Create the Static Mesh Component as Root
+	Arch = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Arch"));
+	Arch->SetupAttachment(RootComponent);
+
+	Door = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door"));
+	Door->SetupAttachment(Arch);
 
 	AISpawned = 0;
 

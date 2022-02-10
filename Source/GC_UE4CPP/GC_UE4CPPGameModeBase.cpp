@@ -10,12 +10,9 @@
 #include "PlayerCharacterController.h"
 #include "AIPatrol.h"
 #include "BaseCharacter.h"
+#include "PlayableCharacter.h"
 
 
-
-
-
-//constructeur et definition du game state
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
 	GameStateClass = AMyGameStateBase::StaticClass();
@@ -25,35 +22,42 @@ AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 
 void AGC_UE4CPPGameModeBase::BeginPlay()
 {
-	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
 	
+	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
+	Player = Cast<APlayableCharacter>(PlayerController->GetPawn());
+	bVictory = false;
 	
 }
 
-//getter des steaks récuperé par le joueur
 float AGC_UE4CPPGameModeBase::GetSteaks() const
 {
 	return GetGameState<AMyGameStateBase>()->NumberOfSteaks;
 }
 
-//setter des steaks récuperé par le joueur
 void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 {
 	GetGameState<AMyGameStateBase>()->NumberOfSteaks = newSteaks;
 }
 
+float AGC_UE4CPPGameModeBase::GetSteaksInGame() const
+{
+	return GetGameState<AMyGameStateBase>()->NumberOfSteaksInGame;
+}
+
+
+void AGC_UE4CPPGameModeBase::SetSteaksInGame(float newSteaks)
+{
+	GetGameState<AMyGameStateBase>()->NumberOfSteaksInGame = newSteaks;
+}
+
+
 void AGC_UE4CPPGameModeBase::Lose()
 {
-	/*TSubclassOf<ABaseCharacter> ClassToFind;
-	ClassToFind = ABaseCharacter::StaticClass();
-	TArray<AActor*> TabActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, TabActors);
-		for (AActor* list : TabActors)
-		{
-			AAIPatrol* Target = Cast<AAIPatrol>(TabActors);
-
-		}
-		*/
+	InGameHUD = Cast<UInGameUserWidgetclass>(PlayerController->InGameHUD);
+	
+	
+	bVictory = false;
+	
 	if (!EndScreenClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
@@ -78,7 +82,11 @@ void AGC_UE4CPPGameModeBase::Lose()
 
 void AGC_UE4CPPGameModeBase::Victory()
 {
-	
+	bVictory = true;
+	if (Player)
+	{
+		Player->PlayerEnd();
+	}
 	UE_LOG(LogTemp, Warning, TEXT("c'est une victoire"));
 	if (!EndScreenClass)
 	{
@@ -109,7 +117,7 @@ void AGC_UE4CPPGameModeBase::GetaSteak()
 {
 	
 	float Temp = GetSteaks();
-	Temp += 0.2;
+	Temp = Temp +0.2F;
 	SetSteaks(Temp);
 	
 	InGameHUD = Cast<UInGameUserWidgetclass>(PlayerController->InGameHUD);
@@ -125,6 +133,19 @@ void AGC_UE4CPPGameModeBase::GetaSteak()
 	
 	
 }
+
+
+float AGC_UE4CPPGameModeBase::GetAI()
+{
+	return GetGameState<AMyGameStateBase>()->NumberOfAI;
+}
+
+void AGC_UE4CPPGameModeBase::SetAI(float AI)
+{
+	GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
+}
+
+
 
 void AGC_UE4CPPGameModeBase::PauseGame()
 {
@@ -158,15 +179,6 @@ void AGC_UE4CPPGameModeBase::PauseGame()
 	}
 }
 
-float AGC_UE4CPPGameModeBase::GetAI()
-{
-	return GetGameState<AMyGameStateBase>()->NumberOfAI;
-}
-
-void AGC_UE4CPPGameModeBase::SetAI(float AI)
-{
-	GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
-}
 
 
 

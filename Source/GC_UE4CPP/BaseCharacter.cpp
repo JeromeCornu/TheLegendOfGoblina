@@ -51,6 +51,7 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
 	// Delegates
 	InteractCapsule->OnComponentBeginOverlap.AddDynamic(this, &ABaseCharacter::InteractiveObjectBeginOverlap);
 	InteractCapsule->OnComponentEndOverlap.AddDynamic(this, &ABaseCharacter::InteractiveObjectEndOverlap);

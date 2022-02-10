@@ -24,6 +24,12 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* Arch;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* Door;
+	
 	// Class references
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Class Reference", meta = (AllowPrivateAccess = true))
 		TSubclassOf<AAIPatrol> AIClassReference;

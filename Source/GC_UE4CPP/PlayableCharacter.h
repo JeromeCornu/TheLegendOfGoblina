@@ -11,6 +11,8 @@ UCLASS()
 class GC_UE4CPP_API APlayableCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
+	//class ABaseCharacter* Parent;
+	class AGC_UE4CPPGameModeBase* GameMode;
 
 public:
 	APlayableCharacter();
@@ -30,6 +32,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = Camera)
 		float MaxZoom;
 
+	UFUNCTION()
+		void PlayerEnd();
 
 protected:
 	virtual void BeginPlay() override;

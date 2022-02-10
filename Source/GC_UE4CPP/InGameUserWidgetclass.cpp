@@ -10,7 +10,7 @@ void UInGameUserWidgetclass::NativeConstruct()
 	if (SteaksBar)
 	{
 		GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
-		GameMode->SetSteaks(0);
+		GameMode->SetSteaks(0.0f);
 		SteaksBar->SetPercent(GameMode->GetSteaks());
 		
 	}

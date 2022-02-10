@@ -12,6 +12,7 @@ class GC_UE4CPP_API AAIPatrol : public ABaseCharacter
 {
 	GENERATED_BODY()
 		class AGC_UE4CPPGameModeBase* GameMode;
+		class ABaseCharacter* Parent;
 
 public:
 	AAIPatrol();
@@ -38,9 +39,8 @@ public:
 	void Despawn();
 
 	UFUNCTION()
-		void WIN();
-	UFUNCTION()
-		void LOOSE();
+		void AIEnd();
+	
 
 private:
 
