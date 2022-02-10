@@ -60,6 +60,7 @@ void ASpawnVolume::Tick(float Delta)
 
 void ASpawnVolume::SpawnActors()
 {	
+	// Get Informations about the map
 	NumberOfSteaksInGame = GameMode->GetSteaksInGame();
 	NumberAI = GameMode->GetAI();
 
@@ -67,12 +68,14 @@ void ASpawnVolume::SpawnActors()
 
 	if (GetWorld() && AIClassReference && MeatClassReference)
 	{
+		// Spawning action
 		FActorSpawnParameters SpawnParamsAI;
 		SpawnParamsAI.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		Bot = GetWorld()->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, FRotator::ZeroRotator, SpawnParamsAI);
 		BotController = Bot->GetController<AAIPatrolController>();
 
+		// Setting parameters
 		GameMode->SetAI(NumberAI + 1);
 
 		Bot->Spawner = this;
@@ -80,26 +83,25 @@ void ASpawnVolume::SpawnActors()
 		BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, true);
 		BotController->bIsPatrolling = true;
 
-		GameMode->SetAI(NumberAI + 1);
-
 		if (NumberOfSteaksInGame < 5)
 		{
 			SpawnMeat();
 		}
-		// to avoid having an unnecessarily large number of AISpawned
 		if (AISpawned < 5)
 		{
+			// to avoid having an unnecessarily large number of AISpawned
 			AISpawned++;
 		}
 	}
-
+	// Recale the function for the 1st three IA
 	if (AISpawned == 1)
 	{
+		// 0 scd for the 2nd AI
 		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 0.1f, false);
 	}
-	// Spawn the third AI, 60 second
 	else if (AISpawned == 2)
 	{
+		// 60 scd for the 3rd AI
 		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 60.0f, false);
 	}
 }
@@ -128,11 +130,10 @@ void ASpawnVolume::SpawnMeat()
 
 void ASpawnVolume::TimerBeforeNextSpawn()
 {
-	// Spawn every 0 ~ 5 seconds when an AI exit
+	// Call SpawnActor every 0 ~ 5 seconds when an AI exit
 	SpawnDelay = FMath::FRandRange(SpawnDelayRangeLow, SpawnDelayRangeHigh);
 	FTimerHandle SpawnTimer;
 	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
-	UE_LOG(LogTemp, Warning, TEXT("Spawn Quand tu Sors TIMER"));
 }
 
 

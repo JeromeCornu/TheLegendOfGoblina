@@ -81,13 +81,11 @@ void AGC_UE4CPPGameModeBase::Lose()
 	
 		if (!EndScreenClass)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
 			return;
 		}
 		EndScreen = CreateWidget(GetWorld(), EndScreenClass);
 		if (!EndScreen)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Menu Class was not defined"));
 			return;
 		}
 		InGameHUD->RemoveFromViewport();
@@ -111,10 +109,8 @@ void AGC_UE4CPPGameModeBase::Victory()
 		{
 			Player->PlayerEnd();
 		}
-		UE_LOG(LogTemp, Warning, TEXT("c'est une victoire"));
 		if (!EndScreenClass)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("end class was not defined"));
 			return;
 		}
 
@@ -122,7 +118,6 @@ void AGC_UE4CPPGameModeBase::Victory()
 		EndScreen = CreateWidget(GetWorld(), EndScreenClass);
 		if (!EndScreen)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("end Class was not defined"));
 			return;
 		}
 		InGameHUD->RemoveFromViewport();

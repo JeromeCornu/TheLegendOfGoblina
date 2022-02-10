@@ -53,12 +53,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName IsPatrollingKey;
 
-	/*
-	// Timer
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-		FTimerHandle SpawnTimer;
-	*/
 
+	// Timer
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		FTimerHandle SpawnTimerStarting;
 
@@ -89,9 +85,6 @@ private:
 	// Properties of Actors
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		FVector SpawnLocation;
-
-	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
-		FVector SpawnMeatLocation;
 
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		FRotator SpawnRotation;
