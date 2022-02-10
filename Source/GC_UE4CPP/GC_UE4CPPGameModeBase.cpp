@@ -13,10 +13,6 @@
 #include "PlayableCharacter.h"
 
 
-
-
-
-//constructeur et definition du game state
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
 	GameStateClass = AMyGameStateBase::StaticClass();
@@ -26,30 +22,29 @@ AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 
 void AGC_UE4CPPGameModeBase::BeginPlay()
 {
+	
 	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
 	Player = Cast<APlayableCharacter>(PlayerController->GetPawn());
 	bVictory = false;
 	
 }
 
-//getter des steaks récuperé par le joueur
 float AGC_UE4CPPGameModeBase::GetSteaks() const
 {
 	return GetGameState<AMyGameStateBase>()->NumberOfSteaks;
 }
 
-//setter des steaks récuperé par le joueur
 void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 {
 	GetGameState<AMyGameStateBase>()->NumberOfSteaks = newSteaks;
 }
-//getter des steaks in the map
+
 float AGC_UE4CPPGameModeBase::GetSteaksInGame() const
 {
 	return GetGameState<AMyGameStateBase>()->NumberOfSteaksInGame;
 }
 
-//setter des steaks in the map
+
 void AGC_UE4CPPGameModeBase::SetSteaksInGame(float newSteaks)
 {
 	GetGameState<AMyGameStateBase>()->NumberOfSteaksInGame = newSteaks;
@@ -58,11 +53,10 @@ void AGC_UE4CPPGameModeBase::SetSteaksInGame(float newSteaks)
 
 void AGC_UE4CPPGameModeBase::Lose()
 {
+	InGameHUD = Cast<UInGameUserWidgetclass>(PlayerController->InGameHUD);
+	
+	
 	bVictory = false;
-	if (Player)
-	{
-		Player->PlayerEnd();
-	}
 	
 	if (!EndScreenClass)
 	{
@@ -140,6 +134,19 @@ void AGC_UE4CPPGameModeBase::GetaSteak()
 	
 }
 
+
+float AGC_UE4CPPGameModeBase::GetAI()
+{
+	return GetGameState<AMyGameStateBase>()->NumberOfAI;
+}
+
+void AGC_UE4CPPGameModeBase::SetAI(float AI)
+{
+	GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
+}
+
+
+
 void AGC_UE4CPPGameModeBase::PauseGame()
 {
 	// if the game is not paused we create a widget 
@@ -172,15 +179,6 @@ void AGC_UE4CPPGameModeBase::PauseGame()
 	}
 }
 
-float AGC_UE4CPPGameModeBase::GetAI()
-{
-	return GetGameState<AMyGameStateBase>()->NumberOfAI;
-}
-
-void AGC_UE4CPPGameModeBase::SetAI(float AI)
-{
-	GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
-}
 
 
 

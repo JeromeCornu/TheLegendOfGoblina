@@ -18,6 +18,8 @@ class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 	class UEndScreen* UserWidgetEndScreen;
 	class AAIPatrol;
 	class APlayableCharacter* Player;
+	
+	
 		
 public:
 	
@@ -69,11 +71,14 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		bool bVictory;
 
+	
+
 
 private:
 	bool GameIsPaused = false;
+
 protected:
-	// Called when the game starts or when spawned
+	
 	virtual void BeginPlay() override;
 
 	

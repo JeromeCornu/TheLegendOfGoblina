@@ -45,7 +45,7 @@ void APlayableCharacter::PlayerEnd()
 {
 	ABaseCharacter::bDead = GameMode->bVictory;
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU WON"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU Finished player"));
 
 	
 }
