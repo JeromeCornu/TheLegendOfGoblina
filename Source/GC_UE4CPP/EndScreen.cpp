@@ -53,5 +53,6 @@ void UEndScreen::Win()
 {
 	VictoryDefeatText->SetColorAndOpacity(FSlateColor(FLinearColor::Green));
 	VictoryDefeatText->SetText(FText::FromString("YOU WON"));
-	
+	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
+
 }
