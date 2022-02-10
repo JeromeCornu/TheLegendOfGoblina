@@ -165,7 +165,7 @@ float AGC_UE4CPPGameModeBase::GetAI()
 
 void AGC_UE4CPPGameModeBase::SetAI(float AI)
 {
-	return GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
+	GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
 }
 
 

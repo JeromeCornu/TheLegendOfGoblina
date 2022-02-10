@@ -45,7 +45,7 @@ void ASpawnVolume::BeginPlay()
 
 void ASpawnVolume::SpawnActors()
 {	
-	NumberMeat = GameMode->GetSteaks();
+	// NumberOfSteaksInGame = GameMode->GetSteaksInGame(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	NumberAI = GameMode->GetAI();
 
 	SpawnLocation = GetRandomLocation();
@@ -70,7 +70,7 @@ void ASpawnVolume::SpawnActors()
 		BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, true);
 		BotController->bIsPatrolling = true;
 
-		if (NumberMeat < 5)
+		if (NumberOfSteaksInGame < 5)
 		{
 			SpawnMeat();
 		}
@@ -100,7 +100,7 @@ void ASpawnVolume::SpawnMeat()
 	Bot->bCarry = true;
 	Bot->ABaseCharacter::SlowCharacter();
 
-	GameMode->SetSteaks(NumberMeat + 1);
+	// GameMode->SetSteaksInGame(NumberOfSteaksInGame + 1); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, false);
 	BotController->bIsPatrolling = false;
@@ -125,7 +125,7 @@ void ASpawnVolume::TimerBeforeNextSpawn()
 		SpawnDelay = FMath::FRandRange(SpawnDelayRangeLow, SpawnDelayRangeHigh);
 		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
 	}
-	if (NumberMeat >= 5)
+	if (NumberOfSteaksInGame >= 5)
 	{
 		// Bot->bIsPatrolling = true;
 	}

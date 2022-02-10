@@ -63,7 +63,7 @@ private:
 
 	// Number of Actors
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
-		float NumberMeat;
+		float NumberOfSteaksInGame;
 
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		float NumberAI;
