@@ -24,10 +24,15 @@ public:
 		UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere)
+		class AGoblina* GoblinaRef;
+
+	UPROPERTY(EditAnywhere)
 		FName SocketName;
 
 	UPROPERTY(EditAnywhere)
 		int32 DestroyDelay;
+
+	
 
 	FTimerHandle TriggerDestroyTimerHandle;
 
@@ -42,6 +47,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void Interact(ABaseCharacter* character) override;
+
 
 	UFUNCTION()
 		void TriggerDestroy();

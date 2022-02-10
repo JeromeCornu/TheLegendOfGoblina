@@ -21,6 +21,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float Delta) override;
 
 private:
 
@@ -52,10 +53,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 		FName IsPatrollingKey;
 
-
+	/*
 	// Timer
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		FTimerHandle SpawnTimer;
+	*/
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+		FTimerHandle SpawnTimerStarting;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn specificities")
 		float SpawnDelayRangeLow;
@@ -91,6 +96,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Spawn specificities")
 		FRotator SpawnRotation;
 
+public:
 
 	UFUNCTION()
 		void SpawnActors();

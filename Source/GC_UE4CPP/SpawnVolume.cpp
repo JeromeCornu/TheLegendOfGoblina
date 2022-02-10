@@ -38,6 +38,8 @@ ASpawnVolume::ASpawnVolume()
 	SpawnDelayRangeHigh = 5.0f;
 
 	IsPatrollingKey = "IsPatrolling";
+
+
 }
 
 
@@ -46,28 +48,32 @@ void ASpawnVolume::BeginPlay()
 	Super::BeginPlay();
 
 	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
-	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 0.1f, false);
+
+	GameMode->DelegateDestroy.AddDynamic(this, &ASpawnVolume::TimerBeforeNextSpawn);
+
+	GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 0.1f, false);
+	UE_LOG(LogTemp, Warning, TEXT("Spawn 1 TIMER"));
+}
+
+void ASpawnVolume::Tick(float Delta)
+{
+	Super::Tick(Delta);
 }
 
 
 void ASpawnVolume::SpawnActors()
 {	
-	// NumberOfSteaksInGame = GameMode->GetSteaksInGame(); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	NumberOfSteaksInGame = GameMode->GetSteaksInGame();
 	NumberAI = GameMode->GetAI();
 
 	SpawnLocation = GetRandomLocation();
-
-	// To get the rotation of the spawning AI
-	SpawnRotation.Yaw = 0.f;	// X rotation
-	SpawnRotation.Pitch = 0.f;	// Y rotation
-	SpawnRotation.Roll = 0.f;	// Z rotation
 
 	if (GetWorld() && AIClassReference && MeatClassReference)
 	{
 		FActorSpawnParameters SpawnParamsAI;
 		SpawnParamsAI.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		Bot = GetWorld()->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, SpawnRotation, SpawnParamsAI);
+		Bot = GetWorld()->SpawnActor<AAIPatrol>(AIClassReference, SpawnLocation, FRotator::ZeroRotator, SpawnParamsAI);
 		BotController = Bot->GetController<AAIPatrolController>();
 
 		GameMode->SetAI(NumberAI + 1);
@@ -76,6 +82,8 @@ void ASpawnVolume::SpawnActors()
 
 		BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, true);
 		BotController->bIsPatrolling = true;
+
+		GameMode->SetAI(NumberAI + 1);
 
 		if (NumberOfSteaksInGame < 5)
 		{
@@ -86,10 +94,19 @@ void ASpawnVolume::SpawnActors()
 		{
 			AISpawned++;
 		}
-		GameMode->SetAI(NumberAI + 1);
 	}
 
-	TimerBeforeNextSpawn();
+	if (AISpawned == 1)
+	{
+		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 0.1f, false);
+		UE_LOG(LogTemp, Warning, TEXT("Spawn 2 TIMER"));
+	}
+	// Spawn the third AI, 60 second
+	else if (AISpawned == 2)
+	{
+		GetWorldTimerManager().SetTimer(SpawnTimerStarting, this, &ASpawnVolume::SpawnActors, 10.0f, false);
+		UE_LOG(LogTemp, Warning, TEXT("Spawn 3 TIMER"));
+	}
 }
 
 void ASpawnVolume::SpawnMeat()
@@ -97,7 +114,7 @@ void ASpawnVolume::SpawnMeat()
 	FActorSpawnParameters SpawnParamsMeat;
 	SpawnParamsMeat.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	APickableItem* Meat = GetWorld()->SpawnActor<APickableItem>(MeatClassReference, SpawnLocation, SpawnRotation, SpawnParamsMeat);
+	APickableItem* Meat = GetWorld()->SpawnActor<APickableItem>(MeatClassReference, SpawnLocation, FRotator::ZeroRotator, SpawnParamsMeat);
 
 	Meat->Owner = Bot;
 	Meat->APickableItem::TogglePhysicsAndCollision();
@@ -107,7 +124,7 @@ void ASpawnVolume::SpawnMeat()
 	Bot->bCarry = true;
 	Bot->ABaseCharacter::SlowCharacter();
 
-	// GameMode->SetSteaksInGame(NumberOfSteaksInGame + 1); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	GameMode->SetSteaksInGame(NumberOfSteaksInGame + 1);
 
 	BotController->GetBlackboardComp()->SetValueAsBool(IsPatrollingKey, false);
 	BotController->bIsPatrolling = false;
@@ -116,26 +133,11 @@ void ASpawnVolume::SpawnMeat()
 
 void ASpawnVolume::TimerBeforeNextSpawn()
 {
-	// Spawn the second AI, ~0 second
-	if (AISpawned == 1)
-	{
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 0.1f, false);
-	}
-	// Spawn the third AI, 60 second
-	if (AISpawned == 2)
-	{
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, 60.0f, false);
-	}
 	// Spawn every 0 ~ 5 seconds when an AI exit
-	if (AISpawned >= 3 && NumberAI < 3)
-	{
-		SpawnDelay = FMath::FRandRange(SpawnDelayRangeLow, SpawnDelayRangeHigh);
-		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
-	}
-	if (NumberOfSteaksInGame >= 5)
-	{
-		// Bot->bIsPatrolling = true;
-	}
+	SpawnDelay = FMath::FRandRange(SpawnDelayRangeLow, SpawnDelayRangeHigh);
+	FTimerHandle SpawnTimer;
+	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnActors, SpawnDelay, false);
+	UE_LOG(LogTemp, Warning, TEXT("Spawn Quand tu Sors TIMER"));
 }
 
 

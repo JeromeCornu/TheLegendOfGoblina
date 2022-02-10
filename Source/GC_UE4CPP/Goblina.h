@@ -21,9 +21,15 @@ protected:
 public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
 	UPROPERTY(EditAnywhere)
 		class UWidgetComponent* WidgetComp;
 
+		class UGoblinaAnimInstance* GoblinaAnimRef;
+
+	UFUNCTION()
+		void StartEatAnimation();
+
+	UFUNCTION()
+		void StopEatAnimation();
 
 };

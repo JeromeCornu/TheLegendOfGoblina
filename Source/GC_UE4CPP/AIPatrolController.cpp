@@ -64,11 +64,6 @@ void AAIPatrolController::OnPossess(APawn* InPawn)
 	}		
 }
 
-void AAIPatrolController::OnUnPossess()
-{
-	UE_LOG(LogTemp, Warning, TEXT("UnPossessed"));
-}
-
 // The player has been seen -> set a key on the blackboard
 void AAIPatrolController::OnSee(AActor* Actor, FAIStimulus Stimulus)
 {
