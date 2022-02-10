@@ -23,7 +23,11 @@ void AGC_UE4CPPGameModeBase::BeginPlay()
 {
 	
 	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
-	Player = Cast<APlayableCharacter>(PlayerController->GetPawn());
+	if (PlayerController)
+	{
+		Player = Cast<APlayableCharacter>(PlayerController->GetPawn());
+	}
+
 	bVictory = false;
 	bFinish = false;
 	
