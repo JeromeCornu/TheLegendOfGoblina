@@ -55,6 +55,7 @@ void AGC_UE4CPPGameModeBase::SetSteaksInGame(float newSteaks)
 
 void AGC_UE4CPPGameModeBase::Lose()
 {
+	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
 	if (!bFinish) 
 	{
 		TArray<AActor*> Actors;

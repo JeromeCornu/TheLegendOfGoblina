@@ -45,7 +45,7 @@ void UEndScreen::Lose()
 {
 	VictoryDefeatText->SetColorAndOpacity( FSlateColor(FLinearColor::Red));
 	VictoryDefeatText->SetText(FText::FromString("YOU LOST"));
-	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
+	
 	
 }
 
