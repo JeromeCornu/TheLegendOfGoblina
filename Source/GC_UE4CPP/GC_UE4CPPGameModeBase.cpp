@@ -171,6 +171,37 @@ void AGC_UE4CPPGameModeBase::SetAI(float AI)
 
 
 
+void AGC_UE4CPPGameModeBase::PauseGame()
+{
+	// if the game is not paused we create a widget 
+	// if not we remove the widget
+	if (!GameIsPaused)
+	{
+		if (!PauseScreenClass)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
+			return;
+		}
+
+		EndScreen = CreateWidget(GetWorld(), PauseScreenClass);
+
+		if (!PauseScreen)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Menu Class was not defined"));
+			return;
+		}
+
+		PauseScreen->AddToViewport();
+		PauseScreen->SetVisibility(ESlateVisibility::Visible);
+
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	}
+	else
+	{
+	PauseScreen->RemoveFromViewport();
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
+	}
+}
 
 
 

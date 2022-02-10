@@ -24,12 +24,12 @@ public:
 	AGC_UE4CPPGameModeBase();
 	virtual ~AGC_UE4CPPGameModeBase() = default;
 
-	// return the number of steaks the player wore
+	// return the number of steaks in the game
 	UFUNCTION(BlueprintPure, Category = "Steaks")
 		virtual float GetSteaks() const;
 
 
-	//setter the number of steaks the player wore
+	//setter the number of steaks
 	UFUNCTION(BlueprintCallable, Category = "Steaks")
 		virtual void SetSteaks(float newSteaks);
 
@@ -38,7 +38,7 @@ public:
 		virtual float GetSteaksInGame() const;
 
 
-	//setter the number of steaks in the game
+	//setter the number of steaks
 	UFUNCTION(BlueprintCallable, Category = "Steaks")
 		virtual void SetSteaksInGame(float newSteaks);
 
@@ -48,7 +48,8 @@ public:
 		void Victory();
 	UFUNCTION()
 		void GetaSteak();
-	
+	UFUNCTION()
+		void PauseGame();
 	
 	UFUNCTION()
 		float GetAI();
@@ -60,6 +61,10 @@ public:
 
 	UUserWidget* EndScreen;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UUserWidget> PauseScreenClass;
+
+	UUserWidget* PauseScreen;
 
 	UPROPERTY(VisibleAnywhere)
 		bool bVictory;
@@ -68,6 +73,10 @@ public:
 		bool bFinish;
 
 	
+
+
+private:
+	bool GameIsPaused = false;
 
 protected:
 	
