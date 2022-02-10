@@ -48,8 +48,6 @@ public:
 		void Victory();
 	UFUNCTION()
 		void GetaSteak();
-	UFUNCTION()
-		void PauseGame();
 	
 	UFUNCTION()
 		float GetAI();
@@ -61,10 +59,6 @@ public:
 
 	UUserWidget* EndScreen;
 
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> PauseScreenClass;
-
-	UUserWidget* PauseScreen;
 
 	UPROPERTY(VisibleAnywhere)
 		bool bVictory;
@@ -73,10 +67,6 @@ public:
 		bool bFinish;
 
 	
-
-
-private:
-	bool GameIsPaused = false;
 
 protected:
 	
