@@ -84,10 +84,6 @@ void ABaseCharacter::Interact()
 void ABaseCharacter::InteractiveObjectBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) 
 {
 	InteractableObject = Cast<IInteractInterface>(OtherActor);
-	if (InteractableObject)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("(ABaseCharacter) Press E to iteract with object"));		
-	}
 }
 
 	
@@ -96,8 +92,6 @@ void ABaseCharacter::InteractiveObjectEndOverlap(UPrimitiveComponent* Overlapped
 	IInteractInterface* OtherInteractable = Cast<IInteractInterface>(OtherActor);
 	if (InteractableObject == OtherInteractable)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("(ABaseCharacter) Cannot press E to iteract anymore"));
-
 		InteractableObject = nullptr;
 	}
 }

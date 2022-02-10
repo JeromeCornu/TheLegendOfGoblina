@@ -17,7 +17,7 @@ class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 	class UEndScreen* UserWidgetEndScreen;
 	class APlayableCharacter* Player;
 	
-	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDestroySignature); // LA
 		
 public:
 	
@@ -27,7 +27,7 @@ public:
 	// return the number of steaks in the game
 	UFUNCTION(BlueprintPure, Category = "Steaks")
 		virtual float GetSteaks() const;
-
+	FDestroySignature DelegateDestroy; // LA
 
 	//setter the number of steaks
 	UFUNCTION(BlueprintCallable, Category = "Steaks")

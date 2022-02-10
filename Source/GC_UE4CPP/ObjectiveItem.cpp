@@ -2,6 +2,7 @@
 #include "BaseCharacter.h"
 #include "PickableItem.h"
 #include "ObjectiveItem.h"
+#include "Goblina.h"
 #include "GC_UE4CPPGameModeBase.h"
 
 // Sets default values
@@ -19,8 +20,6 @@ AObjectiveItem::AObjectiveItem()
 	DestroyDelay = 2;
 
 	Item = nullptr;
-
-	
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +27,7 @@ void AObjectiveItem::BeginPlay()
 {
 	Super::BeginPlay();
 	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
-	
+
 }
 
 // Called every frame
@@ -48,6 +47,7 @@ void AObjectiveItem::Interact(ABaseCharacter* character)
 		if (Item)
 		{
 			Item->LayItemOnStand(StaticMesh, SocketName);
+			GoblinaRef->StartEatAnimation();
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, "Item collected, destroying in few seconds");
 			
 			
