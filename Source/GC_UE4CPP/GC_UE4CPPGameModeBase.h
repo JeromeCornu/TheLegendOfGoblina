@@ -17,6 +17,7 @@ class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 	class UInGameUserWidgetclass* InGameHUD;
 	class UEndScreen* UserWidgetEndScreen;
 	class AAIPatrol;
+	class APlayableCharacter* Player;
 		
 public:
 	
@@ -31,6 +32,15 @@ public:
 	//setter the number of steaks
 	UFUNCTION(BlueprintCallable, Category = "Steaks")
 		virtual void SetSteaks(float newSteaks);
+
+	// return the number of steaks in the game
+	UFUNCTION(BlueprintPure, Category = "Steaks")
+		virtual float GetSteaksInGame() const;
+
+
+	//setter the number of steaks
+	UFUNCTION(BlueprintCallable, Category = "Steaks")
+		virtual void SetSteaksInGame(float newSteaks);
 
 	UFUNCTION()
 		void Lose();
@@ -55,6 +65,9 @@ public:
 		TSubclassOf<UUserWidget> PauseScreenClass;
 
 	UUserWidget* PauseScreen;
+
+	UPROPERTY(VisibleAnywhere)
+		bool bVictory;
 
 
 private:

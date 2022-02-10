@@ -5,10 +5,12 @@
 
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include"GC_UE4CPPGameModeBase.h"
 
 // Sets default values
 APlayableCharacter::APlayableCharacter()
 {
+
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -34,9 +36,20 @@ APlayableCharacter::APlayableCharacter()
 void APlayableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 	UAIPerceptionSystem::RegisterPerceptionStimuliSource(this, UAISense_Sight::StaticClass(), this);
+
 }
+
+void APlayableCharacter::PlayerEnd()
+{
+	ABaseCharacter::bDead = GameMode->bVictory;
+	
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU WON"));
+
+	
+}
+
 
 // Called every frame
 void APlayableCharacter::Tick(float DeltaTime)

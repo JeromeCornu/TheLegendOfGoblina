@@ -4,6 +4,6 @@
 #include "MyGameStateBase.h"
 
 AMyGameStateBase::AMyGameStateBase() :
-	NumberOfSteaks(0),NumberOfAI(0)
+	NumberOfSteaks(0.0F),NumberOfAI(0.0F)
 {
 }

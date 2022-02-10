@@ -23,4 +23,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float NumberOfAI;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float NumberOfSteaksInGame;
+
 };

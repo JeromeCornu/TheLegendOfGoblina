@@ -10,6 +10,7 @@
 #include "PlayerCharacterController.h"
 #include "AIPatrol.h"
 #include "BaseCharacter.h"
+#include "PlayableCharacter.h"
 
 
 
@@ -26,7 +27,8 @@ AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 void AGC_UE4CPPGameModeBase::BeginPlay()
 {
 	PlayerController = Cast<APlayerCharacterController>(GetWorld()->GetFirstPlayerController());
-	
+	Player = Cast<APlayableCharacter>(PlayerController->GetPawn());
+	bVictory = false;
 	
 }
 
@@ -41,19 +43,27 @@ void AGC_UE4CPPGameModeBase::SetSteaks(float newSteaks)
 {
 	GetGameState<AMyGameStateBase>()->NumberOfSteaks = newSteaks;
 }
+//getter des steaks in the map
+float AGC_UE4CPPGameModeBase::GetSteaksInGame() const
+{
+	return GetGameState<AMyGameStateBase>()->NumberOfSteaksInGame;
+}
+
+//setter des steaks in the map
+void AGC_UE4CPPGameModeBase::SetSteaksInGame(float newSteaks)
+{
+	GetGameState<AMyGameStateBase>()->NumberOfSteaksInGame = newSteaks;
+}
+
 
 void AGC_UE4CPPGameModeBase::Lose()
 {
-	/*TSubclassOf<ABaseCharacter> ClassToFind;
-	ClassToFind = ABaseCharacter::StaticClass();
-	TArray<AActor*> TabActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, TabActors);
-		for (AActor* list : TabActors)
-		{
-			AAIPatrol* Target = Cast<AAIPatrol>(TabActors);
-
-		}
-		*/
+	bVictory = false;
+	if (Player)
+	{
+		Player->PlayerEnd();
+	}
+	
 	if (!EndScreenClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Menu class was not defined"));
@@ -78,7 +88,11 @@ void AGC_UE4CPPGameModeBase::Lose()
 
 void AGC_UE4CPPGameModeBase::Victory()
 {
-	
+	bVictory = true;
+	if (Player)
+	{
+		Player->PlayerEnd();
+	}
 	UE_LOG(LogTemp, Warning, TEXT("c'est une victoire"));
 	if (!EndScreenClass)
 	{
@@ -109,7 +123,7 @@ void AGC_UE4CPPGameModeBase::GetaSteak()
 {
 	
 	float Temp = GetSteaks();
-	Temp += 0.2;
+	Temp = Temp +0.2F;
 	SetSteaks(Temp);
 	
 	InGameHUD = Cast<UInGameUserWidgetclass>(PlayerController->InGameHUD);
@@ -165,7 +179,7 @@ float AGC_UE4CPPGameModeBase::GetAI()
 
 void AGC_UE4CPPGameModeBase::SetAI(float AI)
 {
-	return GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
+	GetGameState<AMyGameStateBase>()->NumberOfAI = AI;
 }
 
 
