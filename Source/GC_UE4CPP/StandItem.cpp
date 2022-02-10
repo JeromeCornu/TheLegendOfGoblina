@@ -1,8 +1,7 @@
 
-#include "Engine/TargetPoint.h"
+#include "StandItem.h"
 #include "BaseCharacter.h"
 #include "PickableItem.h"
-#include "StandItem.h"
 
 // Sets default values
 AStandItem::AStandItem()
@@ -21,18 +20,12 @@ AStandItem::AStandItem()
 void AStandItem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (TargetPointClass)
-	{
-		GetWorld()->SpawnActor<ATargetPoint>(TargetPointClass, StaticMesh->GetSocketLocation(SocketName), FRotator::ZeroRotator);
-	}
 }
 
 // Called every frame
 void AStandItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AStandItem::Interact(ABaseCharacter* character)
@@ -41,8 +34,6 @@ void AStandItem::Interact(ABaseCharacter* character)
 	
 	if (LaidItem)
 	{
-		
-		
 		if (character->PossessedObject) 
 		{
 			character->bCarry = false;
@@ -50,7 +41,6 @@ void AStandItem::Interact(ABaseCharacter* character)
 		}
 		else 
 		{
-			
 			character->bCarry = true;
 			LaidItem->Owner = character;
 			LaidItem->TakeItemOnStand();

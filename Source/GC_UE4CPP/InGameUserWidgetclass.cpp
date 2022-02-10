@@ -20,6 +20,6 @@ void UInGameUserWidgetclass::SetPercentage(float Percent)
 {
 	if (SteaksBar !=NULL)
 	{
-	SteaksBar->SetPercent(Percent);
+		SteaksBar->SetPercent(Percent);
 	}
 }
