@@ -17,8 +17,6 @@
 AGC_UE4CPPGameModeBase::AGC_UE4CPPGameModeBase()
 {
 	GameStateClass = AMyGameStateBase::StaticClass();
-	
-	
 }
 
 void AGC_UE4CPPGameModeBase::BeginPlay()
@@ -97,7 +95,6 @@ void AGC_UE4CPPGameModeBase::Lose()
 
 		PlayerController->UnPossess();
 	}
-	
 }
 
 void AGC_UE4CPPGameModeBase::Victory()
@@ -153,9 +150,6 @@ void AGC_UE4CPPGameModeBase::GetaSteak()
 	{
 		Victory();
 	}
-		
-	
-	
 }
 
 

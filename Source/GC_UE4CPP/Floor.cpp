@@ -11,8 +11,6 @@ Floor::Floor()
 	RoomMinY = 1;
 
 	SplitChance = 1.25f;
-
-	UE_LOG(LogTemp, Warning, TEXT("Floor created"));
 }
 
 Floor::Floor(int32 GridSizeX, int32 GridSizeY, int32 NodeMinX, int32 NodeMinY, float SplitChanceFactor)
@@ -24,14 +22,11 @@ Floor::Floor(int32 GridSizeX, int32 GridSizeY, int32 NodeMinX, int32 NodeMinY, f
 	RoomMinY = NodeMinY;
 
 	SplitChance = SplitChanceFactor;
-
-	UE_LOG(LogTemp, Warning, TEXT("Floor created"));
 }
 
 Floor::~Floor()
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("Floor destroyed"));
 }
 
 void Floor::Partition()

@@ -75,10 +75,13 @@ void UCharactersAnimInstance::UpdateAnimProperties()
 			bFinishRef = true;
 			bVictoryRef = true;
 		}
-		else if (GameMode->bFinish)
+		else if (GameMode)
 		{
-			bFinishRef = true;
-			bVictoryRef = false;
+			if (GameMode->bFinish)
+			{
+				bFinishRef = true;
+				bVictoryRef = false;
+			}
 		}
 	}
 }

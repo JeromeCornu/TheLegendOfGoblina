@@ -30,8 +30,6 @@ void AStandItem::Tick(float DeltaTime)
 
 void AStandItem::Interact(ABaseCharacter* character)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Stand Item"));
-	
 	if (LaidItem)
 	{
 		if (character->PossessedObject) 

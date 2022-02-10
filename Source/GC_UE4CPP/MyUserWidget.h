@@ -24,18 +24,12 @@ protected:
 		class UButton* StartButton;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		class UButton* OptionsButton;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 		class UButton* QuitButton;
 
 	virtual void NativeConstruct() override;
 
 	UFUNCTION()
 		void OnStartButtonClicked();
-
-	UFUNCTION()
-		void OnOptionsButtonClicked();
 
 	UFUNCTION()
 		void OnQuitButtonClicked();
