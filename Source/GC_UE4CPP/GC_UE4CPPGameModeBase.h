@@ -6,9 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "GC_UE4CPPGameModeBase.generated.h"
 
-/**
- * 
- */
+class AAIPatrol;
+
 UCLASS()
 class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 {
@@ -16,7 +15,6 @@ class GC_UE4CPP_API AGC_UE4CPPGameModeBase : public AGameModeBase
 	class APlayerCharacterController* PlayerController;
 	class UInGameUserWidgetclass* InGameHUD;
 	class UEndScreen* UserWidgetEndScreen;
-	class AAIPatrol;
 	class APlayableCharacter* Player;
 	
 	
@@ -70,6 +68,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		bool bVictory;
+
+	UPROPERTY(VisibleAnywhere)
+		bool bFinish;
 
 	
 

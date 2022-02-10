@@ -83,7 +83,8 @@ void AAIPatrol::AIEnd()
 {
 	//if the player fail the AI win
 	ABaseCharacter::bDead = !GameMode->bVictory;
-
+	AController* AIController = GetController<AController>();
+	AIController->UnPossess();
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Black, TEXT("YOU Finished AI"));
 
 }

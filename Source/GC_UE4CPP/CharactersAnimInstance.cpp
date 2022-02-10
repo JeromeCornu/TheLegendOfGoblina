@@ -5,6 +5,7 @@
 #include "BaseCharacter.h"
 #include "AIPatrol.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "GC_UE4CPPGameModeBase.h"
 
 // Animations of the characters
 UCharactersAnimInstance::UCharactersAnimInstance()
@@ -22,6 +23,7 @@ void UCharactersAnimInstance::NativeInitializeAnimation()
 
 	// Reference to the BaseCharacter
 	ActorReference = Cast<ABaseCharacter>(TryGetPawnOwner());
+	GameMode = Cast<AGC_UE4CPPGameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
 void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -50,7 +52,7 @@ void UCharactersAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 // Here, variables are uptaded 
 void UCharactersAnimInstance::UpdateAnimProperties()
 {
-
+	
 	//Test actor reference
 	if (ActorReference)
 	{
@@ -68,10 +70,15 @@ void UCharactersAnimInstance::UpdateAnimProperties()
 			bCarryRef = false;
 		}
 
-		if (ActorReference->bDead)
+		if(ActorReference->bDead)
 		{
 			bFinishRef = true;
 			bVictoryRef = true;
+		}
+		else if (GameMode->bFinish)
+		{
+			bFinishRef = true;
+			bVictoryRef = false;
 		}
 	}
 }

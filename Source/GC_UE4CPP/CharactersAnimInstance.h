@@ -13,8 +13,10 @@ UCLASS()
 class GC_UE4CPP_API UCharactersAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
+		 
 
 public:
+	class AGC_UE4CPPGameModeBase* GameMode;
 	UCharactersAnimInstance();
 
 protected:
@@ -31,10 +33,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		float SpeedRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bVictoryRef;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation Properties")
 		bool bFinishRef;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation Properties")
