@@ -3,12 +3,12 @@
 
 #include "MenuHUD.h"
 #include "Blueprint/UserWidget.h"
-
+#include "Kismet/GameplayStatics.h"
 //Apparition du menu
 void AMenuHUD::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
 
 	if (!MenuClass)
