@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
-#include "SpawnVolume.h"
 #include "AIPatrol.generated.h"
 
 UCLASS()
@@ -34,7 +33,7 @@ public:
 	// Size of the sphere collision
 	float SphereRadius;
 
-	ASpawnVolume* Spawner;
+	class ASpawnVolume* Spawner;
 
 	void Despawn();
 

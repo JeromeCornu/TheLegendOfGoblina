@@ -53,9 +53,6 @@ public:
 	// function called when possess a pawn
 	void OnPossess(APawn* InPawn);
 
-	// function called when possess a pawn
-	void OnUnPossess();
-
 	UFUNCTION()
 		void OnSee(AActor* Actor, FAIStimulus Stimulus);
 
